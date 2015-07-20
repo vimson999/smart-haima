@@ -1065,8 +1065,8 @@ namespace HaiMaApp.Web.Hanlder
             postJson.payload.display_type = "notification";
             postJson.payload.body = new ContentBody();
             postJson.payload.body.ticker = "ticker";
-            postJson.payload.body.title = "title";
-            postJson.payload.body.text = "text。。。。。";
+            postJson.payload.body.title = "侬好哇";
+            postJson.payload.body.text = "text。。侬好哇。。侬好哇。";
             postJson.payload.body.after_open = "go_custom";
             postJson.payload.body.custom = "comment-notify";
 
