@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewBag.Title = "登录";
+}
+<div class='container' style="height:374px;width:504px;background-color:white;">
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-signin", role = "form" }))
+    {
+        <h3 class="form-signin-heading text-center" style="color:#4DBFE8">管理平台登录</h3>
+        <hr />
+        <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon2">用户名:</span>
+            <input type="text" name="UserName" class="form-control" placeholder="请输入用户名" aria-describedby="sizing-addon2" required autofocus>
+        </div>
+    <br />
+        <div class="input-group">
+            <span class="input-group-addon">密&nbsp;&nbsp;&nbsp;码:</span>
+            <input type="password" name="password" class="form-control" placeholder="请输入密码" required>
+        </div>
+    <br />
+    <button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color:#4DBFE8;color:white;border:0px;font-size:20px;">登&nbsp;录</button>
+    }
+</div>
+<script>
+    @if (ViewBag.islogin == 0)
+{
+    @Html.Raw("alert('用户名和密码错误')");
+}
+</script>

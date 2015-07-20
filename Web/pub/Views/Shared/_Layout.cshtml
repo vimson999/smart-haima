@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 海马APP后台管理系统</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/modernizr")   
+    @Scripts.Render("~/bundles/bootstrap")
+	<style type="text/css">
+		.nav>li>a {
+			color: white;
+		}
+	</style>
+</head>
+<body>   
+    <div class="blog-masthead navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <img src="../../assets/haima_logo.png" style="height: 35px;margin-top:2px;" />
+            </div>
+            <nav class="blog-nav" id="navdaohang">
+                <a class="blog-nav-item @ViewBag.notice" id="notcie" href="~/home/notice"><strong>通知</strong></a>
+                <a class="blog-nav-item @ViewBag.contact" id="contact" href="~/home/contact"><strong>经销商通讯录</strong></a>
+                <a class="blog-nav-item @ViewBag.dudaoPictureUpload" id="dudaoPictureUpload" href="~/home/dudaoPictureUpload"><strong>督导拍照上传</strong></a>
+                <a class="blog-nav-item @ViewBag.dudaolog" id="dudaolog" href="~/home/dudaolog"><strong>督导出差日志</strong></a>
+                <a class="blog-nav-item @ViewBag.StaffManage" id="staffmanage" href="~/home/StaffManage"><strong>员工管理</strong></a>
+                <a class="blog-nav-item @ViewBag.AreaStatistics" id="areastatistics" href="~/home/AreaStatistics"><strong>督导出差日志New</strong></a>
+                @{
+                    string curentUser = X3.UtilX3.GetCookie("hmToken");
+                    string dudaomingzi = curentUser.ToLower();
+                    if (curentUser.ToLower() != "admin")
+                    {
+                        HaiMaApp db = new HaiMaApp();
+                        dudaomingzi = db.DuDaoRights.Where(d => d.mobile == curentUser).FirstOrDefault().DuDaoMingZi;
+                    }                    
+                }                
+                <a class="blog-nav-item navbar-right"  href="~/account/logout">退出</a>
+                <a class="glyphicon glyphicon-user blog-nav-item navbar-right"> @dudaomingzi</a>
+            </nav>
+</div>
+    </div>
+    <div class="container body-content">
+        <div ></div>
+        @RenderBody()
+        <hr />
+        <footer style="text-align:center;">
+            <p>&copy; @DateTime.Now.Year - 海马APP后台管理系统</p>
+        </footer>
+    </div>
+        @RenderSection("scripts", required: false)
+    
+</body>
+
+
+</html>

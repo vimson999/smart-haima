@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewBag.Title = "登录";
+}
+<div class='container'>
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-signin", role = "form" }))
+    {
+        <h2 class="form-signin-heading">用户登录</h2>
+        <label for="inputEmail" class="sr-only">用户名</label>
+        <input type="text" id="inputEmail" class="form-control" placeholder="请输入用户名" required autofocus>
+        <label for="inputPassword" class="sr-only">密码</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="请输入密码" required>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me"> 记住登录状态
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+    }
+</div>
+
+

@@ -1,0 +1,110 @@
+﻿@using Webdiyer.WebControls.Mvc
+@using X3
+@model  PagedList<TongZhi>
+@{
+    ViewBag.Title = "通知";
+    bool firstData = true;
+    string csp = "in";
+    ViewBag.notice = "active";
+}
+<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+<div class="row">
+    @using (Html.BeginForm("notice", "home", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+    {
+        <div class="form-inline">
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon3">标题:</span>
+                <input type="text" name="kword" class="form-control" placeholder="@ViewBag.kword" aria-describedby="sizing-addon3" />
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon2">开始时间:</span>
+                <input type="text" name="starttime" id="starttime" class="form-control" aria-describedby="sizing-addon2" value="@ViewBag.starttime" />
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon1">结束时间:</span>
+                <input type="text" name="endtime" id="endtime" class="form-control" aria-describedby="sizing-addon1" value="@ViewBag.endtime" />
+            </div>
+            <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
+            <span style="float:right">
+                <a class="btn btn-default " href="AddNotice" role="button">添加通知</a></span>
+                <div style="height:5px; line-height:5px;"></div>
+</div>
+    }
+
+    @*<div style="height:5px;"></div>*@
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+        @foreach (var item in Model)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading@{@item.id}">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse@{@item.id}" aria-expanded="@firstData.ToString().ToLower()" aria-controls="collapse@{@item.id}">
+                            <strong> @item.title</strong> （@item.sender @item.time.ToDateString()）
+                            @{firstData = false;}
+                        </a>
+                        <span style="float:right">
+                            @if (item.IsPublish == true) {
+                                <a style="cursor:pointer;" onclick="publishnotice(@item.id, 1)">取消发布</a>
+                            }
+                            else { 
+                                 @Html.ActionLink("修改", "editnotice", new { id = @item.id }, new { @class = "text-primary" })
+                                 <a style="cursor:pointer;" onclick="publishnotice(@item.id, 0)">发布</a>
+                                 <a style="cursor:pointer;" onclick="delnotice(@item.id)"> 删除</a>
+                            }
+                        </span>
+                    </h4>
+                </div>
+                <div id="collapse@{@item.id}" class="panel-collapse collapse @csp" role="tabpanel" aria-labelledby="heading@{@item.id}">
+                    <div class="panel-body">
+                        @item.content
+                    </div>
+                </div>
+            </div>
+                            csp = "in";  //默认都展开
+        }
+    </div>
+    <div>
+        <div style="float:left;padding:10px 0">共 @Model.TotalPageCount 页 @Model.TotalItemCount 条</div>
+        @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "pn", ShowPageIndexBox = true, CurrentPagerItemWrapperFormatString = "<span class=\"current\">{0}</span>" }, new { id = "badoopager" })<span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#starttime,#endtime").datepicker();
+    })
+
+    function publishnotice(id,ispublish){
+        var tip = ispublish == 1?"确定发布？": "确定取消发布？";
+        if(confirm(tip))
+        {
+            var postdata = {id:id,ispublish:ispublish };
+            $.ajax({
+                type: "post",
+                url: "PublishNotice",
+                data: postdata,
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+    }
+    function delnotice(cid) {
+        if(confirm("确定删除？"))
+        {
+            var postdata = {id:cid};
+            $.ajax({
+                type: "post",
+                url: "DeleteNotice",
+                data: postdata,
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+    }
+</script>
+@section Scripts{@{Html.RegisterMvcPagerScriptResource();}
+@Scripts.Render("~/bundles/jqueryval")}

@@ -1,0 +1,216 @@
+﻿@{
+    ViewBag.Title = "添加通讯录";
+    ViewBag.contact = "active";
+    
+}
+
+@*@using (Html.BeginForm())
+{*@
+    <div>
+        <h2 class="text-success">添加通讯录</h2>
+
+		<div class="form-inline" style="margin:5px">
+			<label for="QuYu" style="width:100px">区域：</label>		
+			<select name="QuYu" class="form-control" style="width: 180px;">
+				<option>华北</option>
+				<option>华东</option>
+				<option>华南</option>
+				<option>华西</option>
+				<option>庞大</option>
+			</select><i class="mark-red">*</i>
+			<label for="ShengFen" style="width:100px;margin-left:100px;">省份：</label>
+			<select name="ShengFen" class="form-control" style="width:180px;">
+				<option>上海</option>
+				<option>江苏</option>
+				<option>浙江</option>
+				<option>安徽</option>
+				<option>北京</option>
+				<option>天津</option>
+				<option>广东</option>
+				<option>河北</option>
+				<option>河南</option>
+				<option>山东</option>
+				<option>湖北</option>
+				<option>湖南</option>
+				<option>江西</option>
+				<option>福建</option>
+				<option>四川</option>
+				<option>重庆</option>
+				<option>广西</option>
+				<option>山西</option>
+				<option>辽宁</option>
+				<option>吉林</option>
+				<option>黑龙江</option>
+				<option>贵州</option>
+				<option>陕西</option>
+				<option>云南</option>
+				<option>内蒙古</option>
+				<option>甘肃</option>
+				<option>青海</option>
+				<option>宁夏</option>
+				<option>新疆</option>
+				<option>海南</option>
+				<option>西藏</option>
+				<option>香港</option>
+				<option>澳门</option>
+				<option>台湾</option>
+			</select><i class="mark-red">*</i>
+		</div>
+		<div class="form-inline" style="margin:5px">
+			<label for="XiaoShouFuWuDian" style="width:100px">销售服务点：</label>
+			<input type="text" name="XiaoShouFuWuDian" class="form-control" placeholder="">
+			<label for="ZhuanYingGongSiMingCheng" style="width:100px;margin-left:100px;">专营公司名称：</label>
+			<input type="text" name="ZhuanYingGongSiMingCheng" class="form-control" placeholder="">
+		</div>
+		<div class="form-inline" style="margin:5px">
+			<label for="Address" style="width:100px">地址：</label>
+			<input type="text" name="Address" class="form-control" style="width: 566px;" placeholder="">
+		</div>
+        <div class="form-inline " style="margin:5px">
+            <label for="DuDaoMingZi" style="width:100px">督导名字：</label>
+            <select name="DuDaoMingZi" class="form-control" mobile=""></select><i class="mark-red">*</i>
+        </div>               
+        <div class="form-inline " style="margin:5px">
+            <label for="ZongJingLi" style="width:100px">总经理：</label>
+            <input type="text" name="ZongJingLi" class="form-control" placeholder="">
+			<label for="ZongJingLiMobile" style="width:100px;margin-left:100px;">总经理电话：</label>
+			<input type="text" name="ZongJingLiMobile" class="form-control" placeholder="">
+        </div>
+        <div class="form-inline " style="margin:5px">
+            <label for="XiaoShouJingLi" style="width:100px">销售经理：</label>
+            <input type="text" name="XiaoShouJingLi" class="form-control" placeholder="">
+			<label for="XiaoShouJingLiMobile" style="width:100px;margin-left:100px;">销售经理电话：</label>
+			<input type="text" name="XiaoShouJingLiMobile" class="form-control" placeholder="">
+        </div>
+        <div class="form-inline " style="margin:5px">
+            <label for="ShiChangJingLi" style="width:100px">市场经理：</label>
+            <input type="text" name="ShiChangJingLi" class="form-control" placeholder="">
+			<label for="ShiChangJingLiMobile" style="width:100px;margin-left:100px;">市场经理电话：</label>
+			<input type="text" name="ShiChangJingLiMobile" class="form-control" placeholder="">
+        </div>
+        <div class="form-inline" style="margin:5px">
+            <i class="mark-tips">Tips：*为必填项！总经理及电话、销售经理及电话、市场经理及电话至少一项不为空！</i>
+        </div>
+        <div class="form-inline " style="margin:5px">
+            <button type="submit" class="btn btn-primary active">添加</button>
+            <button type="button" class="btn btn-primary goback">返回</button>
+        </div>
+    </div>
+@*}*@
+
+<script type="text/javascript">
+    $(function () {
+        getStaffList();
+
+        $("button[type=submit]").click(function () {
+            if (validateNull()) {
+                return;
+            }
+            savedata();
+        });
+
+    })
+
+    function savedata() {
+        var postdata = {
+            QuYu: $("[name=QuYu]").val(),
+            ShengFen: $("[name=ShengFen]").val(),
+            DuDaoMingZi: $("[name=DuDaoMingZi]").val(),
+            XiaoShouFuWuDian: $("[name=XiaoShouFuWuDian]").val(),
+            ZhuanYingGongSiMingCheng: $("[name=ZhuanYingGongSiMingCheng]").val(),
+            Address: $("[name=Address]").val(),
+            ZongJingLi: $("[name=ZongJingLi]").val(),
+            ZongJingLiMobile: $("[name=ZongJingLiMobile]").val(),
+            XiaoShouJingLi: $("[name=XiaoShouJingLi]").val(),
+            XiaoShouJingLiMobile: $("[name=XiaoShouJingLiMobile]").val(),
+            ShiChangJingLi: $("[name=ShiChangJingLi]").val(),
+            ShiChangJingLiMobile: $("[name=ShiChangJingLiMobile]").val(),
+        };
+        $.ajax({
+            type: "post",
+            url: "AddContact",
+            data: postdata,
+            dataType: "json",
+            success: function (data) {
+                location.href = "/home/Contact";
+            }
+        });
+    }
+
+    function validateNull() {
+        var isNull = false;
+
+        var quyu = $("[name=QuYu]").val();
+        if (!quyu) {
+            alert("区域选择不能为空！");
+            isNull = true;
+            return isNull;
+        }
+        var shengfen = $("[name=ShengFen]").val();
+        if (!shengfen) {
+            alert("省份选择不能为空！");
+            isNull = true;
+            return isNull;
+        }
+        var dudao = $("[name=DuDaoMingZi]").val();
+        if (!dudao || dudao == "0") {
+            alert("督导选择不能为空！");
+            isNull = true;
+            return isNull;
+        }
+        var zongJingLi = $("[name=ZongJingLi]").val();
+        var xiaoShouJingLi = $("[name=XiaoShouJingLi]").val();
+        var shiChangJingLi = $("[name=ShiChangJingLi]").val();
+
+        if (!zongJingLi && !xiaoShouJingLi && !shiChangJingLi) {
+            alert("总经理、销售经理、市场经理名字至少一项不为空！");
+            isNull = true;
+            return isNull;
+        }
+
+        var zongJingLiMobile = $("[name=ZongJingLiMobile]").val();
+        if (zongJingLi && !zongJingLiMobile) {
+            alert("总经理电话不能为空！");
+            isNull = true;
+            isNull;
+        }
+        var xiaoShouJingLiMobile = $("[name=XiaoShouJingLiMobile]").val();
+        if (xiaoShouJingLi && !xiaoShouJingLiMobile) {
+            alert("销售经理电话不能为空！");
+            isNull = true;
+            isNull;
+        }
+        var shiChangJingLiMobile = $("[name=ShiChangJingLiMobile]").val();
+        if (shiChangJingLi && !shiChangJingLiMobile) {
+            alert("市场经理电话不能为空！");
+            isNull = true;
+            isNull;
+        }
+        return isNull;
+    }
+
+    //getdudao add by Lee 20150712
+    function getStaffList() {
+        $.ajax({
+            type: "POST",
+            url: "../../Handler/MyHandler.ashx",
+            data: {
+                opertype: "getstafflist"
+            },
+            success: function (data) {
+                var staffmobile = $("[name=DuDaoMingZi]").attr("mobile");
+                if (data && data.length > 0) {
+                    var optionHtml = "<option value='0'>--请选择--</option>";
+                    $.each(data, function (i, o) {
+                        if ((o.StaffName + "/" + o.Mobile) == staffmobile)
+                            optionHtml += "<option selected='selected' value=" + o.StaffName + "/" + o.Mobile + ">" + o.StaffName + "/" + o.Mobile + "</option>";
+                        else
+                            optionHtml += "<option value=" + o.StaffName + "/" + o.Mobile + ">" + o.StaffName + "/" + o.Mobile + "</option>";
+                    });
+                    $("[name=DuDaoMingZi]").append(optionHtml);
+                }
+            },
+            error: function () { }
+        });
+    }
+</script>

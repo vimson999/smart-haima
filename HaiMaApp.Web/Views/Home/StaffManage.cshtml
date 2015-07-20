@@ -1,0 +1,68 @@
+﻿@using Webdiyer.WebControls.Mvc
+@using X3
+@model  PagedList<Staff>
+    @{
+        ViewBag.Title = "员工管理";
+        ViewBag.staffmanage = "active";
+    }
+
+    <div class="row">
+        @using (Html.BeginForm("staffmanage", "home", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="form-inline">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="keyword" placeholder="@ViewBag.keyword">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">搜索</button>
+                    </span>
+                </div>
+                <span style="float:right"><a class="btn btn-default " href="AddStaff" role="button">添加员工</a></span>
+            </div>
+        }
+        <table class="table table-striped table-hover">
+            <caption></caption>
+            <thead>
+                <tr>
+                    <th>区域</th>
+                    <th>职位</th>
+                    <th>员工姓名</th>
+                    <th>电话</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td scope="row">@item.Area</td>
+                        <td>@item.Position</td>
+                        <th>@item.StaffName</th>
+                        <td>@item.Mobile</td>
+                        <td>@Html.ActionLink("修改", "editstaff", new { Id = @item.Id }) <a style="cursor:pointer;" onclick="deleteStaff(@item.Id)">删除</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <div style="float:left;padding:10px 0">共 @Model.TotalPageCount 页 @Model.TotalItemCount 条</div>
+            @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "pn", ShowPageIndexBox = true, CurrentPagerItemWrapperFormatString = "<span class=\"current\">{0}</span>" }, new { id = "badoopager" })<span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span>
+        </div>
+    </div>
+    <script>
+        function deleteStaff(cid) {
+            if(confirm("确定删除？"))
+            {
+                var postdata = {id:cid};
+                $.ajax({
+                    type: "post",
+                    url: "DeleteStaff",
+                    data: postdata,
+                    dataType: "json",
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+    @section Scripts{@{Html.RegisterMvcPagerScriptResource();}}

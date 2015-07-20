@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Product App</title>
+</head>
+<body>
+
+    <div>
+        <h2>All Products</h2>
+        <ul id="products" />
+    </div>
+    <div>
+        <h2>Search by ID</h2>
+        <input type="text" id="prodId" size="5" />
+        <input type="button" value="Search" onclick="find();" />
+        <p id="product" />
+    </div>
+
+    <!--<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>-->
+    <script src="Scripts/jquery-2.1.4.min.js"></script>
+    <script>
+        var uri = 'api/Company';
+
+    $(document).ready(function () {
+      // Send an AJAX request
+        $.getJSON(uri + "/GetAllProducts")
+          .done(function (data) {
+            // On success, 'data' contains a list of products.
+            $.each(data, function (key, item) {
+              // Add a list item for the product.
+              $('<li>', { text: formatItem(item) }).appendTo($('#products'));
+            });
+          });
+    });
+
+    function formatItem(item) {
+        return item.Name + ': $' + item.Price;
+    }
+
+    </script>
+</body>
+</html>

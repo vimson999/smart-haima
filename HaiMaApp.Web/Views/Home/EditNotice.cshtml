@@ -1,0 +1,89 @@
+﻿@model TongZhi
+@{
+    ViewBag.Title = "修改通知";
+    ViewBag.notice = "active";
+}
+
+@*@using (Html.BeginForm())
+{*@
+    <div>
+        <h2 class="text-success">修改通知</h2>
+        <div class="form-inline" style="margin:5px">
+            <label for="title" style="width:100px">标题：</label>
+            <input type="text" name="title" class="form-control" value="@Model.title" placeholder="" style="width:60%"><i class="mark-red">*</i>
+        </div>
+        <div class="form-inline " style="margin:5px">
+            <label for="content" style="width:100px">内容：</label>
+            <textarea class="form-control" name="content" rows="8" style="width:80%">@Model.content</textarea><i class="mark-red">*</i>
+        </div>
+        <div class="form-inline" style="margin:5px">
+            <label for="ispublish" style="width:100px">发布：</label>
+            @if(Model.IsPublish == true){
+                <input name="ispublish" type="radio" value="0" /><label style=" font-weight:normal">不发布</label>
+                <input name="ispublish" type="radio" value="1" checked="checked" /><label style=" font-weight:normal">发布</label>
+            }
+            else
+            {
+                <input name="ispublish" type="radio" value="0" checked="checked" /><label style=" font-weight:normal">不发布</label>
+                <input name="ispublish" type="radio" value="1" /><label style=" font-weight:normal">发布</label>
+            }
+        </div>
+        <div class="form-inline" style="margin:5px">
+            <i class="mark-tips">Tips：*为必填项！</i>
+        </div>     
+        <div class="form-inline " style="margin:5px">
+            <button type="submit" class="btn btn-primary active">修改</button>
+            <button type="button" class="btn btn-primary goback">返回</button>
+        </div>
+    </div>
+@*}*@
+
+<script type="text/javascript">
+    $(function () {
+
+        $("button[type=submit]").click(function () {
+            if (validateNull()) {
+                return;
+            }
+            savedata();
+        });
+
+    })
+
+    function savedata() {
+        var postdata = {
+            id: lee.common.getquerystring("id"),
+            title: $("[name=title]").val(),
+            content: $("[name=content]").val(),
+            ispublish: $("[name=ispublish]:checked").val()
+        };
+        $.ajax({
+            type: "post",
+            url: "AddNotice",
+            data: postdata,
+            dataType: "json",
+            success: function (data) {
+                location.href = "/home/notice";
+            }
+        });
+    }
+
+    function validateNull() {
+        var isNull = false;
+        var title = $("[name=title]").val();
+        var content = $("[name=content]").val();
+
+        if (!title) {
+            alert("标题不能为空！");
+            isNull = true;
+            return isNull;
+        }
+        if (!content) {
+            alert("内容不能为空！");
+            isNull = true;
+            return isNull;
+        }
+        return isNull;
+    }
+
+</script>

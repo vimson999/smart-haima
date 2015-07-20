@@ -1,0 +1,858 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HaiMaAppModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Area">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AreaCode" Type="varchar" MaxLength="50" />
+          <Property Name="AreaName" Type="varchar" MaxLength="50" />
+          <Property Name="Satus" Type="bit" />
+        </EntityType>
+        <EntityType Name="ChuChaiImages">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="chuchai_id" Type="int" />
+          <Property Name="pic_name" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="ChuChaiRiZhi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dianming" Type="varchar" MaxLength="500" />
+          <Property Name="riqi" Type="datetime" />
+          <Property Name="project" Type="varchar" MaxLength="500" />
+          <Property Name="position" Type="varchar" MaxLength="5000" />
+          <Property Name="miaoshu" Type="varchar" MaxLength="5000" />
+          <Property Name="zhenggai" Type="varchar" MaxLength="5000" />
+          <Property Name="xietiao" Type="varchar" MaxLength="5000" />
+          <Property Name="picname" Type="varchar" MaxLength="500" />
+          <Property Name="uploaddate" Type="date" />
+          <Property Name="UploaderPhone" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DuDaoRights">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DuDaoMingZi" Type="varchar" MaxLength="50" />
+          <Property Name="mobile" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="HasRights" Type="bit" />
+        </EntityType>
+        <EntityType Name="NewTongXunLu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuYu" Type="varchar" MaxLength="50" />
+          <Property Name="ShengFen" Type="varchar" MaxLength="50" />
+          <Property Name="DuDaoMingZi" Type="varchar" MaxLength="50" />
+          <Property Name="Mobile" Type="varchar" MaxLength="50" />
+          <Property Name="XiaoShouFuWuDian" Type="varchar" MaxLength="50" />
+          <Property Name="ZhuanYingGongSiMingCheng" Type="varchar" MaxLength="500" />
+          <Property Name="Address" Type="varchar" MaxLength="500" />
+          <Property Name="ZongJingLi" Type="varchar" MaxLength="50" />
+          <Property Name="ZongJingLiMobile" Type="varchar" MaxLength="50" />
+          <Property Name="XiaoShouJingLi" Type="varchar" MaxLength="50" />
+          <Property Name="XiaoShouJingLiMobile" Type="varchar" MaxLength="50" />
+          <Property Name="ShiChangJingLi" Type="varchar" MaxLength="50" />
+          <Property Name="ShiChangJingLiMobile" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PiFuOnChuChai">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PiFuContent" Type="varchar(max)" />
+          <Property Name="chuchaiID" Type="int" />
+        </EntityType>
+        <EntityType Name="Province">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProvinceCode" Type="varchar" MaxLength="50" />
+          <Property Name="ProvinceName" Type="varchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StaffName" Type="varchar" MaxLength="50" />
+          <Property Name="Mobile" Type="varchar" MaxLength="20" />
+          <Property Name="Area" Type="varchar" MaxLength="50" />
+          <Property Name="Position" Type="varchar" MaxLength="50" />
+          <Property Name="Creator" Type="varchar" MaxLength="50" />
+          <Property Name="Createtime" Type="datetime" />
+          <Property Name="Modifier" Type="varchar" MaxLength="50" />
+          <Property Name="Modifytime" Type="datetime" />
+          <Property Name="LoginId" Type="varchar" MaxLength="50" />
+          <Property Name="LoginPassword" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="StaffPosition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PositionName" Type="varchar" MaxLength="50" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
+        <EntityType Name="SuperAdmin">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="50" />
+          <Property Name="password" Type="varchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="memo" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TakePictureUpload">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dianming" Type="varchar" MaxLength="500" />
+          <Property Name="mainproject" Type="varchar" MaxLength="500" />
+          <Property Name="childproject" Type="varchar" MaxLength="500" />
+          <Property Name="riqi" Type="datetime" />
+          <Property Name="project" Type="varchar" MaxLength="500" />
+          <Property Name="position" Type="varchar" MaxLength="500" />
+          <Property Name="description" Type="varchar(max)" />
+          <Property Name="picname" Type="varchar" MaxLength="500" />
+          <Property Name="uploaddate" Type="datetime" />
+          <Property Name="UploaderPhone" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TongXunLu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DianMing" Type="varchar" MaxLength="500" />
+          <Property Name="username" Type="varchar" MaxLength="500" />
+          <Property Name="realname" Type="varchar" MaxLength="500" />
+          <Property Name="ZhiWei" Type="varchar" MaxLength="500" />
+          <Property Name="BuMen" Type="varchar" MaxLength="500" />
+          <Property Name="description" Type="varchar(max)" />
+          <Property Name="Mobile" Type="varchar" MaxLength="50" />
+          <Property Name="email" Type="varchar" MaxLength="50" />
+          <Property Name="address" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="TongZhi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="varchar" MaxLength="500" />
+          <Property Name="content" Type="varchar(max)" />
+          <Property Name="time" Type="datetime" />
+          <Property Name="sender" Type="varchar" MaxLength="500" />
+          <Property Name="IsPublish" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HaiMaApp.dbo.ChuChaiRiZhi_dudao' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ChuChaiRiZhi_dudao">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="dianming" Type="varchar" MaxLength="500" />
+          <Property Name="riqi" Type="datetime" />
+          <Property Name="project" Type="varchar" MaxLength="500" />
+          <Property Name="position" Type="varchar" MaxLength="5000" />
+          <Property Name="miaoshu" Type="varchar" MaxLength="5000" />
+          <Property Name="zhenggai" Type="varchar" MaxLength="5000" />
+          <Property Name="xietiao" Type="varchar" MaxLength="5000" />
+          <Property Name="picname" Type="varchar" MaxLength="500" />
+          <Property Name="uploaddate" Type="date" />
+          <Property Name="UploaderPhone" Type="varchar" MaxLength="50" />
+          <Property Name="DuDaoMingZi" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HaiMaApp.dbo.TakePictureUpload_dudao' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TakePictureUpload_dudao">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="dianming" Type="varchar" MaxLength="500" />
+          <Property Name="mainproject" Type="varchar" MaxLength="500" />
+          <Property Name="childproject" Type="varchar" MaxLength="500" />
+          <Property Name="riqi" Type="datetime" />
+          <Property Name="project" Type="varchar" MaxLength="500" />
+          <Property Name="position" Type="varchar" MaxLength="500" />
+          <Property Name="description" Type="varchar(max)" />
+          <Property Name="picname" Type="varchar" MaxLength="500" />
+          <Property Name="uploaddate" Type="datetime" />
+          <Property Name="UploaderPhone" Type="varchar" MaxLength="50" />
+          <Property Name="DuDaoMingZi" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HaiMaApp.dbo.View_AreaStatisticsTripLog' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_AreaStatisticsTripLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Area" Type="varchar" MaxLength="50" />
+          <Property Name="CountLog" Type="int" />
+          <Property Name="UploadDate" Type="date" />
+          <Property Name="ID" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserStatisticsTripLog' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_SuperviserStatisticsTripLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Area" Type="varchar" MaxLength="50" />
+          <Property Name="StaffName" Type="varchar" MaxLength="50" />
+          <Property Name="Mobile" Type="varchar" MaxLength="20" />
+          <Property Name="CountLog" Type="int" />
+          <Property Name="UploadDate" Type="date" />
+          <Property Name="ID" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_SuperviserTripLog">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="dianming" Type="varchar" MaxLength="500" />
+          <Property Name="riqi" Type="datetime" />
+          <Property Name="project" Type="varchar" MaxLength="500" />
+          <Property Name="position" Type="varchar" MaxLength="5000" />
+          <Property Name="miaoshu" Type="varchar" MaxLength="5000" />
+          <Property Name="zhenggai" Type="varchar" MaxLength="5000" />
+          <Property Name="xietiao" Type="varchar" MaxLength="5000" />
+          <Property Name="picname" Type="varchar" MaxLength="500" />
+          <Property Name="uploaddate" Type="date" />
+          <Property Name="UploaderPhone" Type="varchar" MaxLength="50" />
+          <Property Name="StaffName" Type="varchar" MaxLength="50" />
+          <Property Name="Mobile" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityContainer Name="HaiMaAppModelStoreContainer">
+          <EntitySet Name="Area" EntityType="Self.Area" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChuChaiImages" EntityType="Self.ChuChaiImages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChuChaiRiZhi" EntityType="Self.ChuChaiRiZhi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DuDaoRights" EntityType="Self.DuDaoRights" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewTongXunLu" EntityType="Self.NewTongXunLu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PiFuOnChuChai" EntityType="Self.PiFuOnChuChai" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Province" EntityType="Self.Province" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Staff" EntityType="Self.Staff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StaffPosition" EntityType="Self.StaffPosition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SuperAdmin" EntityType="Self.SuperAdmin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TakePictureUpload" EntityType="Self.TakePictureUpload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TongXunLu" EntityType="Self.TongXunLu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TongZhi" EntityType="Self.TongZhi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChuChaiRiZhi_dudao" EntityType="Self.ChuChaiRiZhi_dudao" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ChuChaiRiZhi_dudao].[id] AS [id], 
+    [ChuChaiRiZhi_dudao].[dianming] AS [dianming], 
+    [ChuChaiRiZhi_dudao].[riqi] AS [riqi], 
+    [ChuChaiRiZhi_dudao].[project] AS [project], 
+    [ChuChaiRiZhi_dudao].[position] AS [position], 
+    [ChuChaiRiZhi_dudao].[miaoshu] AS [miaoshu], 
+    [ChuChaiRiZhi_dudao].[zhenggai] AS [zhenggai], 
+    [ChuChaiRiZhi_dudao].[xietiao] AS [xietiao], 
+    [ChuChaiRiZhi_dudao].[picname] AS [picname], 
+    [ChuChaiRiZhi_dudao].[uploaddate] AS [uploaddate], 
+    [ChuChaiRiZhi_dudao].[UploaderPhone] AS [UploaderPhone], 
+    [ChuChaiRiZhi_dudao].[DuDaoMingZi] AS [DuDaoMingZi]
+    FROM [dbo].[ChuChaiRiZhi_dudao] AS [ChuChaiRiZhi_dudao]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="TakePictureUpload_dudao" EntityType="Self.TakePictureUpload_dudao" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TakePictureUpload_dudao].[id] AS [id], 
+    [TakePictureUpload_dudao].[dianming] AS [dianming], 
+    [TakePictureUpload_dudao].[mainproject] AS [mainproject], 
+    [TakePictureUpload_dudao].[childproject] AS [childproject], 
+    [TakePictureUpload_dudao].[riqi] AS [riqi], 
+    [TakePictureUpload_dudao].[project] AS [project], 
+    [TakePictureUpload_dudao].[position] AS [position], 
+    [TakePictureUpload_dudao].[description] AS [description], 
+    [TakePictureUpload_dudao].[picname] AS [picname], 
+    [TakePictureUpload_dudao].[uploaddate] AS [uploaddate], 
+    [TakePictureUpload_dudao].[UploaderPhone] AS [UploaderPhone], 
+    [TakePictureUpload_dudao].[DuDaoMingZi] AS [DuDaoMingZi]
+    FROM [dbo].[TakePictureUpload_dudao] AS [TakePictureUpload_dudao]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="View_AreaStatisticsTripLog" EntityType="Self.View_AreaStatisticsTripLog" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_AreaStatisticsTripLog].[Area] AS [Area], 
+    [View_AreaStatisticsTripLog].[CountLog] AS [CountLog], 
+    [View_AreaStatisticsTripLog].[UploadDate] AS [UploadDate], 
+    [View_AreaStatisticsTripLog].[ID] AS [ID]
+    FROM [dbo].[View_AreaStatisticsTripLog] AS [View_AreaStatisticsTripLog]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="View_SuperviserStatisticsTripLog" EntityType="Self.View_SuperviserStatisticsTripLog" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_SuperviserStatisticsTripLog].[Area] AS [Area], 
+    [View_SuperviserStatisticsTripLog].[StaffName] AS [StaffName], 
+    [View_SuperviserStatisticsTripLog].[Mobile] AS [Mobile], 
+    [View_SuperviserStatisticsTripLog].[CountLog] AS [CountLog], 
+    [View_SuperviserStatisticsTripLog].[UploadDate] AS [UploadDate], 
+    [View_SuperviserStatisticsTripLog].[ID] AS [ID]
+    FROM [dbo].[View_SuperviserStatisticsTripLog] AS [View_SuperviserStatisticsTripLog]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="View_SuperviserTripLog" EntityType="Self.View_SuperviserTripLog" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_SuperviserTripLog].[id] AS [id], 
+    [View_SuperviserTripLog].[dianming] AS [dianming], 
+    [View_SuperviserTripLog].[riqi] AS [riqi], 
+    [View_SuperviserTripLog].[project] AS [project], 
+    [View_SuperviserTripLog].[position] AS [position], 
+    [View_SuperviserTripLog].[miaoshu] AS [miaoshu], 
+    [View_SuperviserTripLog].[zhenggai] AS [zhenggai], 
+    [View_SuperviserTripLog].[xietiao] AS [xietiao], 
+    [View_SuperviserTripLog].[picname] AS [picname], 
+    [View_SuperviserTripLog].[uploaddate] AS [uploaddate], 
+    [View_SuperviserTripLog].[UploaderPhone] AS [UploaderPhone], 
+    [View_SuperviserTripLog].[StaffName] AS [StaffName], 
+    [View_SuperviserTripLog].[Mobile] AS [Mobile]
+    FROM [dbo].[View_SuperviserTripLog] AS [View_SuperviserTripLog]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HaiMaAppModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="HaiMaApp" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ChuChaiImages" EntityType="HaiMaAppModel.ChuChaiImages" />
+          <EntitySet Name="ChuChaiRiZhi" EntityType="HaiMaAppModel.ChuChaiRiZhi" />
+          <EntitySet Name="DuDaoRights" EntityType="HaiMaAppModel.DuDaoRights" />
+          <EntitySet Name="NewTongXunLu" EntityType="HaiMaAppModel.NewTongXunLu" />
+          <EntitySet Name="PiFuOnChuChai" EntityType="HaiMaAppModel.PiFuOnChuChai" />
+          <EntitySet Name="SuperAdmin" EntityType="HaiMaAppModel.SuperAdmin" />
+          <EntitySet Name="TakePictureUpload" EntityType="HaiMaAppModel.TakePictureUpload" />
+          <EntitySet Name="TongXunLu" EntityType="HaiMaAppModel.TongXunLu" />
+          <EntitySet Name="TongZhi" EntityType="HaiMaAppModel.TongZhi" />
+          <EntitySet Name="ChuChaiRiZhi_dudao" EntityType="HaiMaAppModel.ChuChaiRiZhi_dudao" />
+          <EntitySet Name="TakePictureUpload_dudao" EntityType="HaiMaAppModel.TakePictureUpload_dudao" />
+          <EntitySet Name="Staff" EntityType="HaiMaAppModel.Staff" />
+          <EntitySet Name="StaffPosition" EntityType="HaiMaAppModel.StaffPosition" />
+          <EntitySet Name="View_SuperviserTripLog" EntityType="HaiMaAppModel.View_SuperviserTripLog" />
+          <EntitySet Name="View_AreaStatisticsTripLog" EntityType="HaiMaAppModel.View_AreaStatisticsTripLog" />
+          <EntitySet Name="View_SuperviserStatisticsTripLog" EntityType="HaiMaAppModel.View_SuperviserStatisticsTripLog" />
+          <EntitySet Name="Area" EntityType="HaiMaAppModel.Area" />
+          <EntitySet Name="Province" EntityType="HaiMaAppModel.Province" />
+        </EntityContainer>
+        <EntityType Name="ChuChaiImages">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="chuchai_id" Type="Int32" />
+          <Property Name="pic_name" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ChuChaiRiZhi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dianming" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="riqi" Type="DateTime" Precision="3" />
+          <Property Name="project" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="position" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="miaoshu" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="zhenggai" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="xietiao" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="picname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="uploaddate" Type="DateTime" Precision="0" />
+          <Property Name="UploaderPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DuDaoRights">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DuDaoMingZi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HasRights" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="NewTongXunLu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuYu" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ShengFen" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DuDaoMingZi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="XiaoShouFuWuDian" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ZhuanYingGongSiMingCheng" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ZongJingLi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ZongJingLiMobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="XiaoShouJingLi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="XiaoShouJingLiMobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ShiChangJingLi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ShiChangJingLiMobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PiFuOnChuChai">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PiFuContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="chuchaiID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="SuperAdmin">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="memo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TakePictureUpload">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dianming" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="mainproject" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="childproject" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="riqi" Type="DateTime" Precision="3" />
+          <Property Name="project" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="position" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="picname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="uploaddate" Type="DateTime" Precision="3" />
+          <Property Name="UploaderPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TongXunLu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DianMing" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="realname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ZhiWei" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="BuMen" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="address" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TongZhi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="time" Type="DateTime" Precision="3" />
+          <Property Name="sender" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsPublish" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="ChuChaiRiZhi_dudao">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="dianming" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="riqi" Type="DateTime" Precision="3" />
+          <Property Name="project" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="position" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="miaoshu" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="zhenggai" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="xietiao" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="picname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="uploaddate" Type="DateTime" Precision="0" />
+          <Property Name="UploaderPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DuDaoMingZi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TakePictureUpload_dudao">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="dianming" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="mainproject" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="childproject" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="riqi" Type="DateTime" Precision="3" />
+          <Property Name="project" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="position" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="picname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="uploaddate" Type="DateTime" Precision="3" />
+          <Property Name="UploaderPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DuDaoMingZi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StaffName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Area" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Position" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Creator" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Createtime" Type="DateTime" Precision="3" />
+          <Property Name="Modifier" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Modifytime" Type="DateTime" Precision="3" />
+          <Property Name="LoginId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LoginPassword" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="StaffPosition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PositionName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="View_SuperviserTripLog">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="dianming" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="riqi" Type="DateTime" Precision="3" />
+          <Property Name="project" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="position" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="miaoshu" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="zhenggai" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="xietiao" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="picname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="uploaddate" Type="DateTime" Precision="0" />
+          <Property Name="UploaderPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StaffName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="View_AreaStatisticsTripLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Area" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CountLog" Type="Int32" />
+          <Property Name="UploadDate" Type="DateTime" Precision="0" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="View_SuperviserStatisticsTripLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Area" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StaffName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CountLog" Type="Int32" />
+          <Property Name="UploadDate" Type="DateTime" Precision="0" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Area">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AreaCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AreaName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Satus" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Province">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProvinceCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProvinceName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HaiMaAppModelStoreContainer" CdmEntityContainer="HaiMaApp">
+          <EntitySetMapping Name="ChuChaiImages">
+            <EntityTypeMapping TypeName="HaiMaAppModel.ChuChaiImages">
+              <MappingFragment StoreEntitySet="ChuChaiImages">
+                <ScalarProperty Name="pic_name" ColumnName="pic_name" />
+                <ScalarProperty Name="chuchai_id" ColumnName="chuchai_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChuChaiRiZhi">
+            <EntityTypeMapping TypeName="HaiMaAppModel.ChuChaiRiZhi">
+              <MappingFragment StoreEntitySet="ChuChaiRiZhi">
+                <ScalarProperty Name="UploaderPhone" ColumnName="UploaderPhone" />
+                <ScalarProperty Name="uploaddate" ColumnName="uploaddate" />
+                <ScalarProperty Name="picname" ColumnName="picname" />
+                <ScalarProperty Name="xietiao" ColumnName="xietiao" />
+                <ScalarProperty Name="zhenggai" ColumnName="zhenggai" />
+                <ScalarProperty Name="miaoshu" ColumnName="miaoshu" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="project" ColumnName="project" />
+                <ScalarProperty Name="riqi" ColumnName="riqi" />
+                <ScalarProperty Name="dianming" ColumnName="dianming" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DuDaoRights">
+            <EntityTypeMapping TypeName="HaiMaAppModel.DuDaoRights">
+              <MappingFragment StoreEntitySet="DuDaoRights">
+                <ScalarProperty Name="HasRights" ColumnName="HasRights" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="mobile" ColumnName="mobile" />
+                <ScalarProperty Name="DuDaoMingZi" ColumnName="DuDaoMingZi" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewTongXunLu">
+            <EntityTypeMapping TypeName="HaiMaAppModel.NewTongXunLu">
+              <MappingFragment StoreEntitySet="NewTongXunLu">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="ShiChangJingLiMobile" ColumnName="ShiChangJingLiMobile" />
+                <ScalarProperty Name="ShiChangJingLi" ColumnName="ShiChangJingLi" />
+                <ScalarProperty Name="XiaoShouJingLiMobile" ColumnName="XiaoShouJingLiMobile" />
+                <ScalarProperty Name="XiaoShouJingLi" ColumnName="XiaoShouJingLi" />
+                <ScalarProperty Name="ZongJingLiMobile" ColumnName="ZongJingLiMobile" />
+                <ScalarProperty Name="ZongJingLi" ColumnName="ZongJingLi" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="ZhuanYingGongSiMingCheng" ColumnName="ZhuanYingGongSiMingCheng" />
+                <ScalarProperty Name="XiaoShouFuWuDian" ColumnName="XiaoShouFuWuDian" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="DuDaoMingZi" ColumnName="DuDaoMingZi" />
+                <ScalarProperty Name="ShengFen" ColumnName="ShengFen" />
+                <ScalarProperty Name="QuYu" ColumnName="QuYu" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PiFuOnChuChai">
+            <EntityTypeMapping TypeName="HaiMaAppModel.PiFuOnChuChai">
+              <MappingFragment StoreEntitySet="PiFuOnChuChai">
+                <ScalarProperty Name="chuchaiID" ColumnName="chuchaiID" />
+                <ScalarProperty Name="PiFuContent" ColumnName="PiFuContent" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SuperAdmin">
+            <EntityTypeMapping TypeName="HaiMaAppModel.SuperAdmin">
+              <MappingFragment StoreEntitySet="SuperAdmin">
+                <ScalarProperty Name="memo" ColumnName="memo" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TakePictureUpload">
+            <EntityTypeMapping TypeName="HaiMaAppModel.TakePictureUpload">
+              <MappingFragment StoreEntitySet="TakePictureUpload">
+                <ScalarProperty Name="UploaderPhone" ColumnName="UploaderPhone" />
+                <ScalarProperty Name="uploaddate" ColumnName="uploaddate" />
+                <ScalarProperty Name="picname" ColumnName="picname" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="project" ColumnName="project" />
+                <ScalarProperty Name="riqi" ColumnName="riqi" />
+                <ScalarProperty Name="childproject" ColumnName="childproject" />
+                <ScalarProperty Name="mainproject" ColumnName="mainproject" />
+                <ScalarProperty Name="dianming" ColumnName="dianming" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TongXunLu">
+            <EntityTypeMapping TypeName="HaiMaAppModel.TongXunLu">
+              <MappingFragment StoreEntitySet="TongXunLu">
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="BuMen" ColumnName="BuMen" />
+                <ScalarProperty Name="ZhiWei" ColumnName="ZhiWei" />
+                <ScalarProperty Name="realname" ColumnName="realname" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="DianMing" ColumnName="DianMing" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TongZhi">
+            <EntityTypeMapping TypeName="HaiMaAppModel.TongZhi">
+              <MappingFragment StoreEntitySet="TongZhi">
+                <ScalarProperty Name="IsPublish" ColumnName="IsPublish" />
+                <ScalarProperty Name="sender" ColumnName="sender" />
+                <ScalarProperty Name="time" ColumnName="time" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChuChaiRiZhi_dudao">
+            <EntityTypeMapping TypeName="HaiMaAppModel.ChuChaiRiZhi_dudao">
+              <MappingFragment StoreEntitySet="ChuChaiRiZhi_dudao">
+                <ScalarProperty Name="DuDaoMingZi" ColumnName="DuDaoMingZi" />
+                <ScalarProperty Name="UploaderPhone" ColumnName="UploaderPhone" />
+                <ScalarProperty Name="uploaddate" ColumnName="uploaddate" />
+                <ScalarProperty Name="picname" ColumnName="picname" />
+                <ScalarProperty Name="xietiao" ColumnName="xietiao" />
+                <ScalarProperty Name="zhenggai" ColumnName="zhenggai" />
+                <ScalarProperty Name="miaoshu" ColumnName="miaoshu" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="project" ColumnName="project" />
+                <ScalarProperty Name="riqi" ColumnName="riqi" />
+                <ScalarProperty Name="dianming" ColumnName="dianming" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TakePictureUpload_dudao">
+            <EntityTypeMapping TypeName="HaiMaAppModel.TakePictureUpload_dudao">
+              <MappingFragment StoreEntitySet="TakePictureUpload_dudao">
+                <ScalarProperty Name="DuDaoMingZi" ColumnName="DuDaoMingZi" />
+                <ScalarProperty Name="UploaderPhone" ColumnName="UploaderPhone" />
+                <ScalarProperty Name="uploaddate" ColumnName="uploaddate" />
+                <ScalarProperty Name="picname" ColumnName="picname" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="project" ColumnName="project" />
+                <ScalarProperty Name="riqi" ColumnName="riqi" />
+                <ScalarProperty Name="childproject" ColumnName="childproject" />
+                <ScalarProperty Name="mainproject" ColumnName="mainproject" />
+                <ScalarProperty Name="dianming" ColumnName="dianming" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Staff">
+            <EntityTypeMapping TypeName="HaiMaAppModel.Staff">
+              <MappingFragment StoreEntitySet="Staff">
+                <ScalarProperty Name="LoginPassword" ColumnName="LoginPassword" />
+                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
+                <ScalarProperty Name="Modifytime" ColumnName="Modifytime" />
+                <ScalarProperty Name="Modifier" ColumnName="Modifier" />
+                <ScalarProperty Name="Createtime" ColumnName="Createtime" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="StaffName" ColumnName="StaffName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StaffPosition">
+            <EntityTypeMapping TypeName="HaiMaAppModel.StaffPosition">
+              <MappingFragment StoreEntitySet="StaffPosition">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="PositionName" ColumnName="PositionName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_SuperviserTripLog">
+            <EntityTypeMapping TypeName="HaiMaAppModel.View_SuperviserTripLog">
+              <MappingFragment StoreEntitySet="View_SuperviserTripLog">
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="StaffName" ColumnName="StaffName" />
+                <ScalarProperty Name="UploaderPhone" ColumnName="UploaderPhone" />
+                <ScalarProperty Name="uploaddate" ColumnName="uploaddate" />
+                <ScalarProperty Name="picname" ColumnName="picname" />
+                <ScalarProperty Name="xietiao" ColumnName="xietiao" />
+                <ScalarProperty Name="zhenggai" ColumnName="zhenggai" />
+                <ScalarProperty Name="miaoshu" ColumnName="miaoshu" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="project" ColumnName="project" />
+                <ScalarProperty Name="riqi" ColumnName="riqi" />
+                <ScalarProperty Name="dianming" ColumnName="dianming" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_AreaStatisticsTripLog">
+            <EntityTypeMapping TypeName="HaiMaAppModel.View_AreaStatisticsTripLog">
+              <MappingFragment StoreEntitySet="View_AreaStatisticsTripLog">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
+                <ScalarProperty Name="CountLog" ColumnName="CountLog" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_SuperviserStatisticsTripLog">
+            <EntityTypeMapping TypeName="HaiMaAppModel.View_SuperviserStatisticsTripLog">
+              <MappingFragment StoreEntitySet="View_SuperviserStatisticsTripLog">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
+                <ScalarProperty Name="CountLog" ColumnName="CountLog" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="StaffName" ColumnName="StaffName" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Area">
+            <EntityTypeMapping TypeName="HaiMaAppModel.Area">
+              <MappingFragment StoreEntitySet="Area">
+                <ScalarProperty Name="Satus" ColumnName="Satus" />
+                <ScalarProperty Name="AreaName" ColumnName="AreaName" />
+                <ScalarProperty Name="AreaCode" ColumnName="AreaCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Province">
+            <EntityTypeMapping TypeName="HaiMaAppModel.Province">
+              <MappingFragment StoreEntitySet="Province">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ProvinceName" ColumnName="ProvinceName" />
+                <ScalarProperty Name="ProvinceCode" ColumnName="ProvinceCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

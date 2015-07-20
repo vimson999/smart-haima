@@ -1,0 +1,54 @@
+﻿@using Webdiyer.WebControls.Mvc
+@using X3
+@model  PagedList<NewTongXunLu>
+@{
+    ViewBag.Title = "通讯录";
+}
+
+<div class="row">
+    <div>
+        <a class="btn btn-default" href="AddContact" role="button">添加通讯录</a>
+    </div>
+    <table class="table table-striped table-hover">
+        <caption>通讯录</caption>
+        <thead>
+            <tr>
+                <th>督导</th>
+                <th>督导手机</th>
+                <th>区域</th>
+                <th>省份</th>
+                <th>销售服务点</th>
+                <th>总经理</th>
+                <th>总经理手机</th>
+                <th>销售经理</th>
+                <th>销售经理手机</th>
+                <th>市场经理</th>
+                <th>市场经理手机</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@item.DuDaoMingZi</th>
+                    <td>@item.Mobile</td>
+                    <td>@item.QuYu</td>
+                    <td>@item.ShengFen</td>
+                    <td>@item.XiaoShouFuWuDian</td>
+                    <td>@item.ZongJingLi</td>
+                    <td>@item.ZongJingLiMobile</td>
+                    <td>@item.XiaoShouJingLi</td>
+                    <td>@item.XiaoShouJingLiMobile</td>
+                    <td>@item.ShiChangJingLi</td>
+                    <td>@item.ShiChangJingLiMobile</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div style="height:20px"></div>
+    <div>
+        <div style="float:left;padding:10px 0">共 @Model.TotalPageCount 页 @Model.TotalItemCount 条</div>
+        @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "pn", ShowPageIndexBox = true, CurrentPagerItemWrapperFormatString = "<span class=\"current\">{0}</span>" }, new { id = "badoopager" })<span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span>
+    </div>
+</div>
+@section Scripts{@{Html.RegisterMvcPagerScriptResource();}}

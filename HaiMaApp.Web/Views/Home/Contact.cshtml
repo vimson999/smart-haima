@@ -1,0 +1,112 @@
+﻿@using Webdiyer.WebControls.Mvc
+@using X3
+@model  PagedList<NewTongXunLu>
+@{
+    ViewBag.Title = "经销商通讯录";
+    ViewBag.contact = "active";
+}
+
+<div class="row">
+    @using (Html.BeginForm("contact", "home", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+    {
+        <div class="form-inline">
+            <div class="input-group">
+                <input type="text" class="form-control" name="kword" placeholder="@ViewBag.kword">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">搜索</button>
+                </span>
+            </div>
+            <span style="float:right"><a class="btn btn-default " href="AddContact" role="button">添加通讯录</a></span>
+        </div>
+    }
+    <table class="table table-striped table-hover">
+        <caption></caption>
+        <thead>
+            <tr>
+                <th><a id="dudao" href="" title="">督导</a></th>
+                <th>督导手机</th>
+                <th><a id="quyu" href="" title="">区域</a></th>
+                <th>省份</th>
+                <th>销售服务点</th>
+                <th><a id="zongjingli" href="" title="">总经理</a></th>
+                <th>总经理手机</th>
+                <th>销售经理</th>
+                <th>销售经理手机</th>
+                <th>市场经理</th>
+                <th>市场经理手机</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@item.DuDaoMingZi</th>
+                    <td>@item.Mobile</td>
+                    <td>@item.QuYu</td>
+                    <td>@item.ShengFen</td>
+                    <td>@item.XiaoShouFuWuDian</td>
+                    <td>@item.ZongJingLi</td>
+                    <td>@item.ZongJingLiMobile</td>
+                    <td>@item.XiaoShouJingLi</td>
+                    <td>@item.XiaoShouJingLiMobile</td>
+                    <td>@item.ShiChangJingLi</td>
+                    <td>@item.ShiChangJingLiMobile</td>
+                    <td>@Html.ActionLink("修改", "editcontact", new { id = @item.id }) <a style="cursor:pointer;" onclick="delcontact(@item.id)">删除</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <div style="float:left;padding:10px 0">共 @Model.TotalPageCount 页 @Model.TotalItemCount 条</div>
+        @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "pn", ShowPageIndexBox = true, CurrentPagerItemWrapperFormatString = "<span class=\"current\">{0}</span>" }, new { id = "badoopager" })<span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span>
+    </div>
+</div>
+<script>
+    function delcontact(cid) {
+        if(confirm("确定删除？"))
+        {
+            var postdata = {id:cid};
+            $.ajax({
+                type: "post",
+                url: "DeleteContact",
+                data: postdata,
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+    }
+
+    $(function(){        
+        var dudaomingziorder = lee.common.getquerystring("dudaomingziorder");
+        var quyuorder = lee.common.getquerystring("quyuorder");
+        var zongjingliorder = lee.common.getquerystring("zongjingliorder");
+
+        $("th a").each(function(){
+            var obj = $(this);    
+            var objId = obj.attr("id");
+            if(objId =="dudao")
+            {
+                ordersetting(obj,"/home/contact?dudaomingziorder=",dudaomingziorder,"督导");
+            }
+            else if(objId =="quyu")
+            {
+                ordersetting(obj,"/home/contact?quyuorder=",quyuorder,"区域");
+            }
+            else if(objId == "zongjingli")
+            {
+                ordersetting(obj,"/home/contact?zongjingliorder=",zongjingliorder, "总经理");
+            }
+        });
+    })
+
+    function ordersetting(obj,url,ordercurrent,colname){
+        url += ordercurrent == "desc" ? "asc" : "desc";
+        var title = ordercurrent == "desc"? "点击按" + colname + "名称A-Z排序":"点击按" + colname + "名称Z-A排序";
+        obj.attr("href",url).attr("title",title);
+    }
+
+</script>
+@section Scripts{@{Html.RegisterMvcPagerScriptResource();}}

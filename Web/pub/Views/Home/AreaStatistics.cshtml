@@ -1,0 +1,103 @@
+﻿@using Webdiyer.WebControls.Mvc
+@using HaiMaApp.Web.Models
+@using X3
+@model  PagedList<View_AreaStatisticsTripLog>
+    @{
+        ViewBag.Title = "督导出差日志";
+        ViewBag.areastatistics = "active";
+    }
+    <link href="~/Content/themes/base/all.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <div class="row">
+        @using (Html.BeginForm("areastatistics", "home", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+        {
+        <div class="form-inline">
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon1">区域:　　</span>
+                <input type="text" class="form-control" name="keyword" placeholder="@ViewBag.keyword">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon5">开始时间:</span>
+                <input type="text" name="starttime" id="starttime" class="form-control " aria-describedby="sizing-addon5" value="@ViewBag.starttime" />
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon6">结束时间:</span>
+                <input type="text" name="endtime" id="endtime" class="form-control" aria-describedby="sizing-addon6" value="@ViewBag.endtime" />
+            </div>
+            <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
+        </div>
+        }
+
+        <div style="height:10px; line-height:10px;"></div>
+        <div class="panel-body area-container" style="padding:0px;">
+            @foreach (var item in Model)
+            {
+                <div class="area-list">
+                    <h4>@Html.ActionLink(@item.Area == null ? "其他" : @item.Area, "superviserstatistics", new { area = @item.Area })</h4>
+                    <h4>@item.CountLog</h4><h6>(出差日志)</h6>
+                </div>
+            }
+        </div>
+
+
+
+            @*<table class="table table-striped table-hover">
+                <caption></caption>
+                <thead>
+                    <tr>
+                        <th><a id="area" href="" title="">区域</a></th>
+                        <th><a id="countlog" href="" title="">出差日志</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <th scope="row">@Html.ActionLink(@item.Area==null?"其他":@item.Area, "superviserstatistics", new { area = @item.Area })</th>
+                        <td>@item.CountLog</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>*@
+            <div>
+                <div style="float:left;padding:10px 0">共 @Model.TotalPageCount 页 @Model.TotalItemCount 条</div>
+                @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "pn", ShowPageIndexBox = true, CurrentPagerItemWrapperFormatString = "<span class=\"current\">{0}</span>" }, new { id = "badoopager" })<span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span>
+            </div>
+        </div>
+    <script>
+
+        $(function () {
+
+            $('[data-toggle="popover"]').popover();
+            $("#starttime,#endtime").datepicker();                       
+
+            //loadordersetting();
+        })
+
+        function loadordersetting() {
+            var areaorder = lee.common.getquerystring("areaorder");
+            var countlogorder = lee.common.getquerystring("countlogorder");
+
+            $("th a").each(function () {
+                var obj = $(this);
+                var objId = obj.attr("id");
+                if (objId == "area") {
+                    ordersetting(obj, "/home/areastatistics?areaorder=", areaorder, "区域");
+                }
+                else if (objId == "countlog") {
+                    ordersetting(obj, "/home/areastatistics?countlogorder=", countlogorder, "出差日志");
+                }
+            });
+        }
+
+        function ordersetting(obj, url, ordercurrent, colname) {
+            url += ordercurrent == "desc" ? "asc" : "desc";
+            var title = "";
+            if (colname == "区域")
+                title += ordercurrent == "desc" ? "点击按" + colname + "名称A-Z排序" : "点击按" + colname + "名称Z-A排序";
+            else
+                title += ordercurrent == "desc" ? "点击按" + colname + "0-N排序" : "点击按" + colname + "N-0排序";
+            obj.attr("href", url).attr("title", title);
+        }
+    </script>
+    @section Scripts{@{Html.RegisterMvcPagerScriptResource();}}

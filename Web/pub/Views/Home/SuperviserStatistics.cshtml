@@ -1,0 +1,92 @@
+﻿@using Webdiyer.WebControls.Mvc
+@using HaiMaApp.Web.Models
+@using X3
+@model  PagedList<View_SuperviserStatisticsTripLog>
+    @{
+        ViewBag.Title = "督导出差日志";
+        ViewBag.superviserstatistics = "active";
+    }
+    <link href="~/Content/themes/base/all.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <div class="row">
+        @using (Html.BeginForm("superviserstatistics", "home", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+        {
+        <div class="form-inline">
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon1">督导:　　</span>
+                <input type="text" class="form-control" name="keyword" placeholder="@ViewBag.keyword">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon5">开始时间:</span>
+                <input type="text" name="starttime" id="starttime" class="form-control " aria-describedby="sizing-addon5" value="@ViewBag.starttime" />
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon6">结束时间:</span>
+                <input type="text" name="endtime" id="endtime" class="form-control" aria-describedby="sizing-addon6" value="@ViewBag.endtime" />
+            </div>
+            <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
+            <input type="button" class="form-control goback" style="margin:0px 5px; " value="转到区域维度统计页" />
+        </div>
+        }
+        <table class="table table-striped table-hover">
+            <caption></caption>
+            <thead>
+                <tr>
+                    <th><a id="staff" href="" title="">督导</a></th>
+                    <th>电话</th>
+                    <th><a id="countlog" href="" title="">出差日志</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td scope="row">@Html.ActionLink(@item.StaffName==null ?"其他": @item.StaffName, "triplogdetail", new { dudaomz = @item.StaffName })</td>
+                    <td>@item.Mobile</td>
+                    <td>@item.CountLog</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <div style="float:left;padding:10px 0">共 @Model.TotalPageCount 页 @Model.TotalItemCount 条</div>
+            @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "pn", ShowPageIndexBox = true, CurrentPagerItemWrapperFormatString = "<span class=\"current\">{0}</span>" }, new { id = "badoopager" })<span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span>
+        </div>
+    </div>
+    <script>
+
+        $(function () {
+
+            $('[data-toggle="popover"]').popover();
+            $("#starttime,#endtime").datepicker();
+
+            loadordersetting();
+        })
+
+        function loadordersetting() {
+            var stafforder = lee.common.getquerystring("stafforder");
+            var countlogorder = lee.common.getquerystring("countlogorder");
+
+            $("th a").each(function () {
+                var obj = $(this);
+                var objId = obj.attr("id");
+                if (objId == "staff") {
+                    ordersetting(obj, "/home/superviserstatistics?stafforder=", stafforder, "督导");
+                }
+                else if (objId == "countlog") {
+                    ordersetting(obj, "/home/superviserstatistics?countlogorder=", countlogorder, "出差日志");
+                }
+            });
+        }
+
+        function ordersetting(obj, url, ordercurrent, colname) {
+            url += ordercurrent == "desc" ? "asc" : "desc";
+            var title = "";
+            if (colname == "督导")
+                title += ordercurrent == "desc" ? "点击按" + colname + "名称A-Z排序" : "点击按" + colname + "名称Z-A排序";
+            else
+                title += ordercurrent == "desc" ? "点击按" + colname + "0-N排序" : "点击按" + colname + "N-0排序";
+            obj.attr("href", url).attr("title", title);
+        }
+    </script>
+    @section Scripts{@{Html.RegisterMvcPagerScriptResource();}}

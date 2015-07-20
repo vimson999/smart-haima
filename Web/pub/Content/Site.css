@@ -1,0 +1,109 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    /*max-width: 280px;*/
+}
+
+/*badoo style modify by Lee 20150716*/
+
+div#badoopager {padding-right: 0px; padding-left: 0px; font-size: 14px; padding-bottom: 10px; color: #48b9ef; padding-top: 10px; font-family: arial, helvetica, sans-serif; background-color: #fff; text-align: center}
+div#badoopager a {border: #f0f0f0 2px solid;padding: 5px 5px; color: #48b9ef; text-decoration: none}
+div#badoopager a:hover {border: #48b9ef 2px solid; color: #48b9ef; }
+div#badoopager a:active {border: #48b9ef 2px solid; color: #f0f0f0;}
+div#badoopager span.current {border: #48b9ef 2px solid; padding:5px 5px; font-weight: bold; color: #fff; background-color: #48b9ef}
+div#badoopager a.disabled {display: none}
+div#badoopager input[type=text]{width:30px; margin:0px 2px;padding: 5px 5px; text-align:center;}
+div#badoopager input[type=button] {border: #f0f0f0 2px solid;background-color: #fff; padding: 5px 5px; }
+div#badoopager input[type=button]:hover {border: #48b9ef 2px solid; }
+
+
+/*
+ * Masthead for nav
+ */
+
+.blog-masthead {
+  background-color: #48b9ef;
+  -webkit-box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
+          box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
+}
+
+/* Nav links */
+.blog-nav-item {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  font-weight: 500;
+  color: #f0f0f0;
+}
+.blog-nav-item:hover,
+.blog-nav-item:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Active state gets a caret at the bottom */
+.blog-nav .active {
+  color: #fff;
+}
+.blog-nav .active:after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -5px;
+  vertical-align: middle;
+  content: " ";
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid;
+  border-left: 5px solid transparent;
+}
+
+
+/*add by Lee 20150716*/
+.area-container {
+    padding :0px;
+    width:99%;
+}
+.area-list {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #555;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 20px 45px;
+    margin:5px;
+    margin-left:0px;
+    text-align: center;
+    float:left;
+}
+.mark-red {
+    color:red;
+    font-weight:bold;
+    text-align:center;
+}
+.mark-tips {
+    color:orangered;
+    font-weight:bold;
+    text-align:center;
+}
