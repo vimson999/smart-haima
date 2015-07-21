@@ -8,21 +8,25 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/modernizr")   
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrap")    
+
 	<style type="text/css">
 		.nav>li>a {
 			color: white;
 		}
-        body {
+        /*navigator css height*/
+        .blog-masthead .navbar-fixed-top .container {
             line-height: 60px;
+            height:60px;
             font-size: 16px;
             font-family: 'Microsoft YaHei',sans-serif;
+            margin-bottom: 30px;
         }
-        .blog-nav-item{
-            top :20px;   
+        .blog-nav {
+            padding:10px 0px;
         }
-        .glyphicon {
-            vertical-align:central;
+        .blog-nav .active::after {
+            bottom:-10px;
         }
 	</style>
 </head>
@@ -30,7 +34,7 @@
     <div class="blog-masthead navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <img src="../../assets/haima_logo.png" style="height: 60px;margin:5px 0px;" />
+                <img src="../../assets/haima_logo.png" style="height: 50px;margin:5px 0px;" />
             </div>
             <nav class="blog-nav" id="navdaohang">
                 <a class="blog-nav-item @ViewBag.notice" id="notcie" href="~/home/notice"><strong>通知</strong></a>
