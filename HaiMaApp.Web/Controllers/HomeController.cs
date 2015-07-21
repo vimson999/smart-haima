@@ -19,7 +19,8 @@ namespace HaiMaApp.Web.Controllers
         string inputKeyword = "请输入关键字";
 
         #region tongxunlu
-        public ActionResult Contact(int pn = 1, string kword = null, string quyuorder = null, string dudaomingziorder = null, string zongjingliorder = null)
+        public ActionResult Contact(int pn = 1, string kword = null, string quyuorder = null, string dudaomingziorder = null, string zongjingliorder = null,
+                                    string xiaoshoujingliorder = null, string shichangjingliorder = null)
         {
             var query = db.NewTongXunLu.AsQueryable();
             if (!string.IsNullOrWhiteSpace(kword))
@@ -56,8 +57,24 @@ namespace HaiMaApp.Web.Controllers
                 else
                     query = query.OrderBy(c => c.ZongJingLi);
             }
+            if (!string.IsNullOrWhiteSpace(xiaoshoujingliorder))
+            {
+                if (xiaoshoujingliorder.ToLower() == "desc")
+                    query = query.OrderByDescending(c => c.XiaoShouJingLi);
+                else
+                    query = query.OrderBy(c => c.XiaoShouJingLi);
+            }
+            if (!string.IsNullOrWhiteSpace(shichangjingliorder))
+            {
+                if (shichangjingliorder.ToLower() == "desc")
+                    query = query.OrderByDescending(c => c.ShiChangJingLi);
+                else
+                    query = query.OrderBy(c => c.ShiChangJingLi);
+            }
 
-            if (string.IsNullOrWhiteSpace(quyuorder) && string.IsNullOrWhiteSpace(dudaomingziorder) && string.IsNullOrWhiteSpace(zongjingliorder))
+            if (string.IsNullOrWhiteSpace(quyuorder) && string.IsNullOrWhiteSpace(dudaomingziorder) &&
+                string.IsNullOrWhiteSpace(zongjingliorder) && string.IsNullOrWhiteSpace(xiaoshoujingliorder) &&
+                string.IsNullOrWhiteSpace(shichangjingliorder))
             {
                 query = query.OrderByDescending(c => c.id);
             }
@@ -511,6 +528,7 @@ namespace HaiMaApp.Web.Controllers
         [HttpPost]
         public ActionResult AddStaff(string staffName, string mobile, string area, string position)
         {
+            var password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6);
             var model = new Staff()
                 {
                     StaffName = staffName,
@@ -518,7 +536,9 @@ namespace HaiMaApp.Web.Controllers
                     Area = area,
                     Position = position,
                     Creator = string.IsNullOrEmpty(UtilX3.GetCookie("hmToken")) ? "" : UtilX3.GetCookie("hmToken"),
-                    Createtime = DateTime.Now
+                    Createtime = DateTime.Now,
+                    LoginId = mobile,
+                    LoginPassword = password
                 };
 
             db.Staff.Add(model);
@@ -530,7 +550,7 @@ namespace HaiMaApp.Web.Controllers
                 {
                     DuDaoMingZi = staffName,
                     mobile = mobile,
-                    Password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6),
+                    Password = password,
                     HasRights = true
                 };
                 db.DuDaoRights.Add(dudao);
@@ -540,7 +560,7 @@ namespace HaiMaApp.Web.Controllers
                 var admin = new SuperAdmin()
                 {
                     username = mobile,
-                    password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6),
+                    password = password,
                     Status = true,
                     memo = staffName
                 };
@@ -565,6 +585,8 @@ namespace HaiMaApp.Web.Controllers
             //找到原始的数据，置无效
             var oldData = db.Staff.Where(t => t.Id == id).FirstOrDefault();
 
+            var password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6);
+
             //更新staff表
             db.Staff.Where(t => t.Id == id).Update(t => new Staff
             {
@@ -573,7 +595,9 @@ namespace HaiMaApp.Web.Controllers
                 Area = area,
                 Position = position,
                 Modifier = string.IsNullOrEmpty(UtilX3.GetCookie("hmToken")) ? "" : UtilX3.GetCookie("hmToken"),
-                Modifytime = DateTime.Now
+                Modifytime = DateTime.Now,
+                LoginId = mobile,
+                LoginPassword = password
             });
 
             //如果是督导，向DuDaoRights表更新数据；如果是大区经理，向SuperAdmin表更新数据
@@ -583,7 +607,7 @@ namespace HaiMaApp.Web.Controllers
                 {
                     DuDaoMingZi = staffName,
                     mobile = mobile,
-                    Password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6),
+                    Password = password,
                     HasRights = true
                 });
             }
@@ -592,7 +616,7 @@ namespace HaiMaApp.Web.Controllers
                 db.SuperAdmin.Where(t => t.username == oldData.Mobile).Update(t => new SuperAdmin
                 {
                     username = mobile,
-                    password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6),
+                    password = password,
                     Status = true,
                     memo = staffName
                 });
@@ -626,6 +650,37 @@ namespace HaiMaApp.Web.Controllers
 
             return Json("1");
         }
+
+        //更新员工登录密码 by Lee 20150720
+        public ActionResult ModifyPassword(string mobile, string password)
+        {
+            var staff = db.Staff.Where(c => c.Mobile == mobile).FirstOrDefault();
+
+            db.Staff.Where(c => c.Mobile == mobile).Update(t => new Staff
+            {
+                LoginPassword = password,
+                Modifier = string.IsNullOrEmpty(UtilX3.GetCookie("hmToken")) ? "" : UtilX3.GetCookie("hmToken"),
+                Modifytime = DateTime.Now
+            });
+
+            //如果是督导，向DuDaoRights表更新数据；如果是大区经理，向SuperAdmin表更新数据
+            if (staff.Position.Contains("督导"))
+            {
+                db.DuDaoRights.Where(t => t.mobile == staff.Mobile).Update(t => new DuDaoRights
+                {
+                    Password = password
+                });
+            }
+            else if (staff.Position.Contains("经理"))
+            {
+                db.SuperAdmin.Where(t => t.username == staff.Mobile).Update(t => new SuperAdmin
+                {
+                    password = password
+                });
+            }
+            return Json("1");
+        }
+
         #endregion
 
         #region superviser's trip log by Lee 20150714
@@ -653,32 +708,39 @@ namespace HaiMaApp.Web.Controllers
             }
 
             //groupby
-            var queryX = (from r in db.Area
+            var queryY = (from r in db.Area
                           join s in query on r.AreaName equals s.Area into union
                           from v in union.DefaultIfEmpty()
                           select new
                           {
                               Area = r.AreaName,
-                              CountLog = v == null ? 0 : v.CountLog,
-                              UploadDate = v == null ? null : v.UploadDate,
-                              ID = v == null ? 0 : v.ID
-                          }).GroupBy(t => new { t.Area,t.CountLog });
+                              CountLog = v == null ? 0 : v.CountLog
+                          }).GroupBy(t => new { t.Area, t.CountLog });
+
+            var queryX = from q in queryY.AsEnumerable()
+                         group q by q.Key.Area into ultimate
+                         select new
+                         {
+                             Area = ultimate.Key,
+                             CountLog = ultimate.Sum(q => q.Key.CountLog)
+                         };
+
 
             queryX.ToList().ForEach(t => new View_AreaStatisticsTripLog
             {
-                Area = t.Key.Area,
-                CountLog = t.Count()
+                Area = t.Area,
+                CountLog = t.CountLog
             });
 
             if (string.IsNullOrWhiteSpace(areaorder) && string.IsNullOrWhiteSpace(countlogorder))
-                queryX = queryX.OrderBy(t => t.Key.Area);
+                queryX = queryX.OrderBy(t => t.Area);
 
             var list = new List<View_AreaStatisticsTripLog>();
             foreach (var item in queryX.AsEnumerable())
             {
                 var area = new View_AreaStatisticsTripLog();
-                area.Area = item.Key.Area;
-                area.CountLog = item.Key.CountLog;
+                area.Area = item.Area;
+                area.CountLog = item.CountLog;
                 list.Add(area);
             };
 
@@ -733,11 +795,11 @@ namespace HaiMaApp.Web.Controllers
             }
 
             //groupby
-            var queryX = (from r in db.Area
+            var queryY = (from r in db.Area
                           join s in query on r.AreaName equals s.Area into union
                           from v in union.DefaultIfEmpty()
-                          where (v !=null && v.StaffName !=null)
-                          select new 
+                          where (v != null && v.StaffName != null)
+                          select new
                           {
                               Area = r.AreaName,
                               CountLog = v == null ? 0 : v.CountLog,
@@ -745,28 +807,39 @@ namespace HaiMaApp.Web.Controllers
                               ID = v == null ? 0 : v.ID,
                               StaffName = v == null ? "--" : v.StaffName,
                               Mobile = v == null ? "--" : v.Mobile
-                          }).GroupBy(t => new { t.Area, t.StaffName, t.Mobile,t.CountLog });
+                          }).GroupBy(t => new { t.Area, t.StaffName, t.Mobile, t.CountLog });
+
+
+            var queryX = from q in queryY.AsEnumerable()
+                         group q by new { q.Key.Area, q.Key.StaffName, q.Key.Mobile } into ultimate
+                         select new
+                         {
+                             Area = ultimate.Key.Area,
+                             StaffName = ultimate.Key.StaffName,
+                             Mobile = ultimate.Key.Mobile,
+                             CountLog = ultimate.Sum(q => q.Key.CountLog)
+                         };
 
             queryX.ToList().ForEach(t => new View_SuperviserStatisticsTripLog
             {
-                Area = t.Key.Area,
-                StaffName = t.Key.StaffName,
-                Mobile = t.Key.Mobile,
-                CountLog = t.Key.CountLog
+                Area = t.Area,
+                StaffName = t.StaffName,
+                Mobile = t.Mobile,
+                CountLog = t.CountLog
             });
 
             if (string.IsNullOrWhiteSpace(stafforder) && string.IsNullOrWhiteSpace(countlogorder))
-                queryX = queryX.OrderBy(t => t.Key.StaffName);
+                queryX = queryX.OrderBy(t => t.StaffName);
 
 
             var list = new List<View_SuperviserStatisticsTripLog>();
             foreach (var item in queryX.AsEnumerable())
             {
                 var superviser = new View_SuperviserStatisticsTripLog();
-                superviser.Area = item.Key.Area;
-                superviser.StaffName = item.Key.StaffName;
-                superviser.Mobile = item.Key.Mobile;
-                superviser.CountLog = item.Count();
+                superviser.Area = item.Area;
+                superviser.StaffName = item.StaffName;
+                superviser.Mobile = item.Mobile;
+                superviser.CountLog = item.CountLog;
                 list.Add(superviser);
             };
 

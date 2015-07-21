@@ -30,9 +30,9 @@
                 <th>销售服务点</th>
                 <th><a id="zongjingli" href="" title="">总经理</a></th>
                 <th>总经理手机</th>
-                <th>销售经理</th>
+                <th><a id="xiaoshoujingli" href="" title="">销售经理</a></th>
                 <th>销售经理手机</th>
-                <th>市场经理</th>
+                <th><a id="shichangjingli" href="" title="">市场经理</a></th>
                 <th>市场经理手机</th>
                 <th>操作</th>
             </tr>
@@ -83,6 +83,8 @@
         var dudaomingziorder = lee.common.getquerystring("dudaomingziorder");
         var quyuorder = lee.common.getquerystring("quyuorder");
         var zongjingliorder = lee.common.getquerystring("zongjingliorder");
+        var xiaoshoujingliorder = lee.common.getquerystring("xiaoshoujingliorder");
+        var shichangjingliorder = lee.common.getquerystring("shichangjingliorder");
 
         $("th a").each(function(){
             var obj = $(this);    
@@ -98,6 +100,12 @@
             else if(objId == "zongjingli")
             {
                 ordersetting(obj,"/home/contact?zongjingliorder=",zongjingliorder, "总经理");
+            }
+            else if(objId == "shichangjingli"){
+                ordersetting(obj,"/home/contact?shichangjingliorder=",shichangjingliorder, "市场经理");   
+            }
+            else if(objId == "xiaoshoujingli"){
+                ordersetting(obj,"/home/contact?xiaoshoujingliorder=",xiaoshoujingliorder, "销售经理");   
             }
         });
     })

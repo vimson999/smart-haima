@@ -25,7 +25,8 @@
                 <input type="text" name="endtime" id="endtime" class="form-control" aria-describedby="sizing-addon6" value="@ViewBag.endtime" />
             </div>
             <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
-            <input type="button" class="form-control goback" style="margin:0px 5px; " value="转到区域维度统计页" />
+            &nbsp;@Html.ActionLink("转到区域维度统计页", "AreaStatistics", new { }, new { @class = "btn btn-default", @role = "button" })
+
         </div>
         }
         <table class="table table-striped table-hover">

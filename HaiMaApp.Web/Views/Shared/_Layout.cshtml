@@ -13,13 +13,24 @@
 		.nav>li>a {
 			color: white;
 		}
+        body {
+            line-height: 60px;
+            font-size: 16px;
+            font-family: 'Microsoft YaHei',sans-serif;
+        }
+        .blog-nav-item{
+            top :20px;   
+        }
+        .glyphicon {
+            vertical-align:central;
+        }
 	</style>
 </head>
 <body>   
     <div class="blog-masthead navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <img src="../../assets/haima_logo.png" style="height: 35px;margin-top:2px;" />
+                <img src="../../assets/haima_logo.png" style="height: 60px;margin:5px 0px;" />
             </div>
             <nav class="blog-nav" id="navdaohang">
                 <a class="blog-nav-item @ViewBag.notice" id="notcie" href="~/home/notice"><strong>通知</strong></a>
@@ -42,7 +53,7 @@
             </nav>
 </div>
     </div>
-    <div class="container body-content">
+    <div class="container body-content" style="margin-top:20px;">
         <div ></div>
         @RenderBody()
         <hr />
@@ -51,6 +62,18 @@
         </footer>
     </div>
         @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        //add by Lee 20150720 disabled
+        $(function () {
+
+            $("#badoopager a").each(function () {
+                if ($(this).attr("disabled") == "disabled")
+                    $(this).css("color", "#888").css("border", "2px #f0f0f0 solid ").css("a:hover", "2px #f0f0f0 solid");
+            });
+        })
+
+    </script>
     
 </body>
 

@@ -27,8 +27,8 @@
                     <input type="text" name="endtime" id="endtime" class="form-control" aria-describedby="sizing-addon6" value="@ViewBag.endtime" />
                 </div>
                 <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
-                                @Html.ActionLink("导出excel", "dudaologToExcel", new { dm = @ViewBag.dm, dudaomz = @ViewBag.dudaomz, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
-                <input type="button" class="form-control goback" style="margin:0px 5px; " value="转到督导维度统计页" />
+                @Html.ActionLink("导出excel", "dudaologToExcel", new { dm = @ViewBag.dm, dudaomz = @ViewBag.dudaomz, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
+                &nbsp;@Html.ActionLink("转到督导维度统计页", "SuperviserStatistics", new { }, new { @class = "btn btn-default", @role = "button" })
             </div>
             <div class="form-inline">
 

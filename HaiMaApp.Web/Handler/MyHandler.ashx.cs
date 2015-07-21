@@ -239,7 +239,8 @@ namespace HaiMaApp.Web.Hanlder
             //var pageIndex = QueryString.GetQuery(context, "pageIndex");
             //var pageSize = ConfigurationManager.AppSettings["pageSize"].ToString();
 
-            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, "  select top 10 * from tongzhi order by [time] desc");
+            var commandText = "  SELECT TOP 10 * FROM tongzhi WHERE IsPublish = 1 ORDER BY [time] DESC ";  //modify by Lee 20150720 ispublish = 1
+            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, commandText);
             if (datasource != null && datasource.Tables.Count > 0)
             {
                 List<TongZhiReturn> lists = new List<TongZhiReturn>();
@@ -270,7 +271,8 @@ namespace HaiMaApp.Web.Hanlder
             var maxid = QueryString.GetQuery(context, "maxid");
             //var pageSize = ConfigurationManager.AppSettings["pageSize"].ToString();
 
-            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, "select id, title,time from tongzhi where id>" + maxid + " order by [time] desc");
+            var commandText = "SELECT id, title,time FROM tongzhi WHERE id>" + maxid + " AND IsPublish = 1 ORDER BY [time] DESC";   //modify by Lee 20150720 ispublish = 1
+            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, commandText);
             if (datasource != null && datasource.Tables.Count > 0)
             {
                 List<TongZhiReturn> lists = new List<TongZhiReturn>();
