@@ -83,11 +83,14 @@ namespace HaiMaApp.Web.Hanlder
                 case "businesstravel":
                     businesstravel(context);
                     break;
-                case "getstaffpositionlist":            //getstaffpositionlist by Lee 20150712 
+                case "getstaffpositionlist":            //getstaffpositionlist by Lee 20150712 页面用，非对外接口
                     getStaffPositionList(context);
                     break;
-                case "getstafflist":                    //getstafflist by Lee 20150712 
+                case "getstafflist":                    //getstafflist by Lee 20150712 页面用，非对外接口
                     getStaffList(context);
+                    break;
+                case "replySuperviserPhotosUpload":      //replySuperviserPhotosUpload by Lee 20150721 
+                    replySuperviserPhotosUpload(context);
                     break;
                 case "getarealist":                    //getAreaList by vim 20150719 
                     getAreaList(context);
@@ -102,6 +105,30 @@ namespace HaiMaApp.Web.Hanlder
                     break;
             }
         }
+
+        #region 批复照片上传 by Lee 20150721
+        private void replySuperviserPhotosUpload(HttpContext context)
+        {
+            var id = QueryString.GetQuery(context, "id");
+            var content = QueryString.GetQuery(context, "content");
+
+            var commandText = string.Format("INSERT INTO PiFuOnPictureUpload(PictureUploadID,PiFuContent) VALUES({0},'{1}') ", id, context);
+            var result = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, commandText);
+            string returnMsg = "";
+            if (Int32.Parse(result.ToString()) > 0)
+            {
+                returnMsg = "success";
+            }
+            else
+            {
+                returnMsg = "fail";
+            }
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            var str = serializer.Serialize(returnMsg);
+            context.Response.ContentType = "text/json;charset=UTF-8;";
+            context.Response.Write(str);
+        }
+        #endregion
 
         private void logincheck(HttpContext context)
         {
@@ -128,7 +155,7 @@ namespace HaiMaApp.Web.Hanlder
         {
             var phone = QueryString.GetQuery(context, "phone");
 
-            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, 
+            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
                 string.Format("select top 100 * from ChuChaiRiZhi a left join PiFuOnChuChai b on a.id=b.chuchaiid where a.uploaderphone='{0}' order by riqi desc", phone));
             if (datasource != null && datasource.Tables.Count > 0)
             {
@@ -149,10 +176,10 @@ namespace HaiMaApp.Web.Hanlder
                         var imageSource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
                                             string.Format("select top 100 * from [ChuChaiImages] where chuchai_id='{0}' order by id desc", Int32.Parse(datasource.Tables[0].Rows[i]["id"].ToString())));
 
-                        var imageList = new List<string> ();
-                        if ( imageSource != null && imageSource.Tables.Count > 0)
+                        var imageList = new List<string>();
+                        if (imageSource != null && imageSource.Tables.Count > 0)
                         {
-                            for ( var j = 0 ;j < imageSource.Tables [0].Rows .Count ; j ++)
+                            for (var j = 0; j < imageSource.Tables[0].Rows.Count; j++)
                             {
                                 imageList.Add(imageSource.Tables[0].Rows[j]["pic_name"].ToString());
                             }
@@ -170,9 +197,8 @@ namespace HaiMaApp.Web.Hanlder
                             dianming = datasource.Tables[0].Rows[i]["dianming"] != null ? datasource.Tables[0].Rows[i]["dianming"].ToString() : "",
                             PiFuContentList = new List<string>()
                             {
-                                datasource.Tables[0].Rows[i]["PiFuContent"] != null
-                            ? datasource.Tables[0].Rows[i]["PiFuContent"].ToString()
-                            : ""
+                                datasource.Tables[0].Rows[i]["PiFuContent"] != null ? 
+                                datasource.Tables[0].Rows[i]["PiFuContent"].ToString() : ""
                             },
                             imgList = imageList
                         });
@@ -184,30 +210,62 @@ namespace HaiMaApp.Web.Hanlder
                 context.Response.Write(str);
             }
         }
+        
+        //modify by Lee 20150721 添加批复内容
         private void getmypaizhaolist(HttpContext context)
         {
             var phone = QueryString.GetQuery(context, "phone");
 
-            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, string.Format("select top 100 * from TakePictureUpload where UploaderPhone='{0}' order by riqi desc", phone));
+            var commandText = string.Format("select top 100 * from TakePictureUpload a left join PiFuOnPictureUpload b on a.id=b.PictureUploadID where a.uploaderphone='{0}' order by riqi desc", phone);
+            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, commandText);
             if (datasource != null && datasource.Tables.Count > 0)
             {
                 List<MyPaiZhao> lists = new List<MyPaiZhao>();
                 for (int i = 0; i < datasource.Tables[0].Rows.Count; i++)
                 {
-
-                    lists.Add(new MyPaiZhao()
+                    var tempid = Int32.Parse(datasource.Tables[0].Rows[i]["id"].ToString());
+                    var obj = lists.FirstOrDefault(item => item.id == tempid);
+                    if (obj != null)
                     {
-                        id = Int32.Parse(datasource.Tables[0].Rows[i]["id"].ToString()),
-                        newriqi = DateTime.Parse(datasource.Tables[0].Rows[i]["riqi"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
-                        mainproject = datasource.Tables[0].Rows[i]["mainproject"].ToString(),
-                        childproject = datasource.Tables[0].Rows[i]["childproject"].ToString(),
-                        position = datasource.Tables[0].Rows[i]["position"].ToString(),
-                        description = datasource.Tables[0].Rows[i]["description"].ToString(),
-                        dianming = datasource.Tables[0].Rows[i]["dianming"] != null ? datasource.Tables[0].Rows[i]["dianming"].ToString() : "",
-                        picname = datasource.Tables[0].Rows[i]["picname"].ToString()
+                        var pifucontent = datasource.Tables[0].Rows[i]["PiFuContent"] != null ? 
+                                          datasource.Tables[0].Rows[i]["PiFuContent"].ToString() : "";
+                        obj.PiFuContentList.Add(pifucontent);
+                    }
+                    else
+                    {
+                        lists.Add(new MyPaiZhao()
+                        {
+                            id = Int32.Parse(datasource.Tables[0].Rows[i]["id"].ToString()),
+                            newriqi = DateTime.Parse(datasource.Tables[0].Rows[i]["riqi"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
+                            mainproject = datasource.Tables[0].Rows[i]["mainproject"].ToString(),
+                            childproject = datasource.Tables[0].Rows[i]["childproject"].ToString(),
+                            position = datasource.Tables[0].Rows[i]["position"].ToString(),
+                            description = datasource.Tables[0].Rows[i]["description"].ToString(),
+                            dianming = datasource.Tables[0].Rows[i]["dianming"] != null ? datasource.Tables[0].Rows[i]["dianming"].ToString() : "",
+                            picname = datasource.Tables[0].Rows[i]["picname"].ToString(),
+                            PiFuContentList = new List<string>()
+                            {
+                                datasource.Tables[0].Rows[i]["PiFuContent"] != null
+                            ? datasource.Tables[0].Rows[i]["PiFuContent"].ToString()
+                            : ""
+                            }
 
-                    });
+                        });
+                    }
 
+                    // old code
+                    //lists.Add(new MyPaiZhao()
+                    //{
+                    //    id = Int32.Parse(datasource.Tables[0].Rows[i]["id"].ToString()),
+                    //    newriqi = DateTime.Parse(datasource.Tables[0].Rows[i]["riqi"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
+                    //    mainproject = datasource.Tables[0].Rows[i]["mainproject"].ToString(),
+                    //    childproject = datasource.Tables[0].Rows[i]["childproject"].ToString(),
+                    //    position = datasource.Tables[0].Rows[i]["position"].ToString(),
+                    //    description = datasource.Tables[0].Rows[i]["description"].ToString(),
+                    //    dianming = datasource.Tables[0].Rows[i]["dianming"] != null ? datasource.Tables[0].Rows[i]["dianming"].ToString() : "",
+                    //    picname = datasource.Tables[0].Rows[i]["picname"].ToString()
+
+                    //});
                 }
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 var str = serializer.Serialize(lists);
@@ -557,8 +615,8 @@ namespace HaiMaApp.Web.Hanlder
 
                 //str = "[手机 : " + phone + " ,店名 : " + name + " ,主项目 :" + mname + " ,子项目 : " + cname + " ,时间 : " + time + " ,位置 : " + position + " ,描述 :" + description + "]";
 
-                var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, 
-                    String.Format("insert into TakePictureUpload(dianming,riqi,position,description,mainproject,childproject,uploaderphone) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}') ;select @@identity", 
+                var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
+                    String.Format("insert into TakePictureUpload(dianming,riqi,position,description,mainproject,childproject,uploaderphone) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}') ;select @@identity",
                     name, time, position, description, mname, cname, phone));
 
                 uploadOneImage(ret.ToString(), context);
@@ -951,9 +1009,10 @@ namespace HaiMaApp.Web.Hanlder
 
         #region getstafflist by Lee 20150712
 
-        private void getStaffList(HttpContext context) {
+        private void getStaffList(HttpContext context)
+        {
 
-            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, 
+            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
                 @"SELECT StaffName,Mobile FROM Staff WHERE Position = '督导' ORDER BY CreateTime");
             if (datasource != null && datasource.Tables.Count > 0)
             {
@@ -1003,10 +1062,11 @@ namespace HaiMaApp.Web.Hanlder
                         var dianList = new List<Tongxunlu>();
                         for (int j = 0; j < dianSource.Tables[0].Rows.Count; j++)
                         {
-                            var dian = new Tongxunlu() {
+                            var dian = new Tongxunlu()
+                            {
                                 quyu = dianSource.Tables[0].Rows[j]["quyu"].ToString(),
                                 xiaoshoufuwudian = dianSource.Tables[0].Rows[j]["xiaoshoufuwudian"].ToString(),
-                                zhuanyinggongsimingcheng = dianSource.Tables[0].Rows[j]["zhuanyinggongsimingcheng"].ToString()    
+                                zhuanyinggongsimingcheng = dianSource.Tables[0].Rows[j]["zhuanyinggongsimingcheng"].ToString()
                             };
 
                             dianList.Add(dian);

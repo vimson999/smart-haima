@@ -33,7 +33,7 @@
             @foreach (var item in Model)
             {
                 <div class="area-list">
-                    <h4>@Html.ActionLink(@item.Area == null ? "其他" : @item.Area, "superviserstatistics", new { area = @item.Area })</h4>
+                    <h4>@Html.ActionLink(@item.Area == null ? "其他" : @item.Area, "superviserstatistics", new { area = @item.Area, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime })</h4>
                     <h4>@item.CountLog</h4><h6>(出差日志)</h6>
                 </div>
             }

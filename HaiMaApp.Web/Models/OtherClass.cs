@@ -57,6 +57,15 @@ namespace HaiMaApp.Web.Models
     public class MyPaiZhao : TakePictureUpload
     {
         public string newriqi { get; set; }
+
+        //modify by Lee 20150721 pifu
+        public MyPaiZhao()
+        {
+            if (PiFuContentList != null)
+                PiFuContentList = new List<string>();
+        }
+        public string PiFuCount { get; set; }
+        public List<string> PiFuContentList { get; set; }
     }
 
     public class Tongxunlu
