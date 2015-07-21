@@ -72,6 +72,9 @@ namespace HaiMaApp.Web.Hanlder
                 case "getmypaizhaolist":
                     getmypaizhaolist(context);
                     break;
+                case "getmypaizhaolistnew":     //add by Lee 20150721
+                    getmypaizhaolistnew(context);
+                    break;
                 case "logincheck":
                     logincheck(context);
                     break;
@@ -210,9 +213,39 @@ namespace HaiMaApp.Web.Hanlder
                 context.Response.Write(str);
             }
         }
-        
-        //modify by Lee 20150721 添加批复内容
+
+
         private void getmypaizhaolist(HttpContext context)
+        {
+            var phone = QueryString.GetQuery(context, "phone");
+
+            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,  string.Format("select top 100 * from TakePictureUpload where uploaderphone='{0}' order by riqi desc", phone));
+            if (datasource != null && datasource.Tables.Count > 0)
+            {
+                List<MyPaiZhao> lists = new List<MyPaiZhao>();
+                for (int i = 0; i < datasource.Tables[0].Rows.Count; i++)
+                {
+                    lists.Add(new MyPaiZhao()
+                    {
+                        id = Int32.Parse(datasource.Tables[0].Rows[i]["id"].ToString()),
+                        newriqi = DateTime.Parse(datasource.Tables[0].Rows[i]["riqi"].ToString()).ToString("yyyy-MM-dd HH:mm:ss"),
+                        mainproject = datasource.Tables[0].Rows[i]["mainproject"].ToString(),
+                        childproject = datasource.Tables[0].Rows[i]["childproject"].ToString(),
+                        position = datasource.Tables[0].Rows[i]["position"].ToString(),
+                        description = datasource.Tables[0].Rows[i]["description"].ToString(),
+                        dianming = datasource.Tables[0].Rows[i]["dianming"] != null ? datasource.Tables[0].Rows[i]["dianming"].ToString() : "",
+                        picname = datasource.Tables[0].Rows[i]["picname"].ToString()
+                    });
+                }
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                var str = serializer.Serialize(lists);
+                context.Response.ContentType = "text/json;charset=UTF-8;";
+                context.Response.Write(str);
+            }
+        }
+
+        //add by Lee 20150721 添加批复内容 改接口启用后，原接口getmypaizhaolist废除
+        private void getmypaizhaolistnew(HttpContext context)
         {
             var phone = QueryString.GetQuery(context, "phone");
 
