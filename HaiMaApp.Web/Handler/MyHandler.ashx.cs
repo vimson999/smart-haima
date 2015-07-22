@@ -219,7 +219,7 @@ namespace HaiMaApp.Web.Hanlder
         {
             var phone = QueryString.GetQuery(context, "phone");
 
-            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,  string.Format("select top 100 * from TakePictureUpload where uploaderphone='{0}' order by riqi desc", phone));
+            var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, string.Format("select top 100 * from TakePictureUpload where uploaderphone='{0}' order by riqi desc", phone));
             if (datasource != null && datasource.Tables.Count > 0)
             {
                 List<MyPaiZhao> lists = new List<MyPaiZhao>();
@@ -260,7 +260,7 @@ namespace HaiMaApp.Web.Hanlder
                     var obj = lists.FirstOrDefault(item => item.id == tempid);
                     if (obj != null)
                     {
-                        var pifucontent = datasource.Tables[0].Rows[i]["PiFuContent"] != null ? 
+                        var pifucontent = datasource.Tables[0].Rows[i]["PiFuContent"] != null ?
                                           datasource.Tables[0].Rows[i]["PiFuContent"].ToString() : "";
                         obj.PiFuContentList.Add(pifucontent);
                     }
@@ -606,7 +606,11 @@ namespace HaiMaApp.Web.Hanlder
             var picname = QueryString.GetQuery(context, "picname");
             var uploaderphone = QueryString.GetQuery(context, "mobile");
 
-            var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, String.Format("insert into TakePictureUpload(dianming,riqi,position,description,mainproject,childproject,uploaderphone) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}') ;select @@identity", dianming, DateStr, position, description, mainproject, childproject, uploaderphone));
+            //modify by Lee 20150722 add uploaddate
+            var commandText = String.Format(@"insert into TakePictureUpload(dianming,riqi,position,description,mainproject,childproject,uploaderphone,uploaddate) 
+                                              values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}') ;select @@identity",
+                                              dianming, DateStr, position, description, mainproject, childproject, uploaderphone, DateStr);
+            var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, commandText);
             //var msg = "";
             //if (ret > 0)
             //{
@@ -648,9 +652,11 @@ namespace HaiMaApp.Web.Hanlder
 
                 //str = "[手机 : " + phone + " ,店名 : " + name + " ,主项目 :" + mname + " ,子项目 : " + cname + " ,时间 : " + time + " ,位置 : " + position + " ,描述 :" + description + "]";
 
-                var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
-                    String.Format("insert into TakePictureUpload(dianming,riqi,position,description,mainproject,childproject,uploaderphone) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}') ;select @@identity",
-                    name, time, position, description, mname, cname, phone));
+                //modify by Lee 20150722 add uploaddate
+                var commandText = string.Format(@"insert into TakePictureUpload(dianming,riqi,position,description,mainproject,childproject,uploaderphone,uploaddate) 
+                                                  values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}') ;select @@identity",
+                                                 name, time, position, description, mname, cname, phone, time);
+                var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, commandText);
 
                 uploadOneImage(ret.ToString(), context);
 
@@ -766,7 +772,6 @@ namespace HaiMaApp.Web.Hanlder
 
 
                     //var retid = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, "update ChuChaiRiZhi set picname='" + picName + "' where id=" + id);
-
                     var retid = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, "insert into ChuChaiImages values(" + id + ",'" + picName + "')");
                 }
             }
@@ -784,11 +789,13 @@ namespace HaiMaApp.Web.Hanlder
                 string shenqing = context.Request.Form["shenqing"]; //协调申请
                 string yaoqiu = context.Request.Form["yaoqiu"]; //整改要求
 
+                //modify by Lee 20150722 add uploaddate
+                var commandText = string.Format(@"insert into ChuChaiRiZhi(dianming,riqi,position,miaoshu,zhenggai,xietiao,uploaderphone,uploaddate) 
+                                                  values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}') ;select @@identity",
+                                                name, shijian, positon, miaoshu, yaoqiu, shenqing, phone, shijian);
+
                 var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(),
-                    CommandType.Text,
-                    String.Format(
-                        "insert into ChuChaiRiZhi(dianming,riqi,position,miaoshu,zhenggai,xietiao,uploaderphone) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}') ;select @@identity",
-                        name, shijian, positon, miaoshu, yaoqiu, shenqing, phone));
+                    CommandType.Text, commandText);
 
                 uploadMultipleImages(ret.ToString(), context);
 
@@ -832,8 +839,12 @@ namespace HaiMaApp.Web.Hanlder
             var zhenggai = QueryString.GetQuery(context, "zhenggai");
             var xietiao = QueryString.GetQuery(context, "xietiao");
             var mobile = QueryString.GetQuery(context, "mobile");
-
-            var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, String.Format("insert into ChuChaiRiZhi(dianming,riqi,position,miaoshu,zhenggai,xietiao,uploaderphone) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}') ;select @@identity", dianming, DateStr, position, miaoshu, zhenggai, xietiao, mobile));
+            
+                //modify by Lee 20150722 add uploaddate
+            var commandText = string.Format(@"insert into ChuChaiRiZhi(dianming,riqi,position,miaoshu,zhenggai,xietiao,uploaderphone,uploaddate) 
+                                              values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}') ;select @@identity", 
+                                              dianming, DateStr, position, miaoshu, zhenggai, xietiao, mobile,DateStr);
+            var ret = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,commandText );
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             var str = serializer.Serialize(new ReturnCode() { retid = ret.ToString() });
             context.Response.ContentType = "text/json;charset=UTF-8;";
