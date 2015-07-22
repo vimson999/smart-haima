@@ -19,6 +19,22 @@
                 <input type="text" name="dm" class="form-control" placeholder="@ViewBag.dm" aria-describedby="sizing-addon3" />
             </div>
             <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon4">主项目:　</span>
+                <select id="mainproject" name="mainproject" class="form-control" style="width:180px;" mainproject="@ViewBag.mainproject">
+                    <option value="0">--请选择--</option>
+                    <option value="展厅布置">展厅布置</option>
+                    <option value="营销活动">营销活动</option>
+                    <option value="培训会议">培训会议</option>
+                    <option value="广宣资料">广宣资料</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">子项目:　</span>
+                <select id="childproject" name="childproject" class="form-control" childproject="@ViewBag.childproject" value="@ViewBag.childproject"><option value="0">--请选择--</option></select>
+            </div>
+            <div style="height:5px; line-height:5px;"></div>
+            <div class="input-group">
                 <span class="input-group-addon" id="sizing-addon5">开始时间:</span>
                 <input type="text" name="starttime" id="starttime" class="form-control " aria-describedby="sizing-addon5" value="@ViewBag.starttime" />
             </div>
@@ -27,9 +43,9 @@
                 <input type="text" name="endtime" id="endtime" class="form-control" aria-describedby="sizing-addon6" value="@ViewBag.endtime" />
             </div>
             <input type="hidden" name="dudaomz" id="dudaomz" value="@ViewBag.dudaomz" />
-            <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
+            <input type="submit" class="form-control" style="margin:0px 2px; " value="搜索" />
             @Html.ActionLink("导出excel", "dudaologToExcel", new { area=@ViewBag.area,dm =( @ViewBag.dm=="请输入关键字"?"":@ViewBag.dm), dudaomz = @ViewBag.dudaomz, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
-            &nbsp;@Html.ActionLink("转到督导维度统计页", "SuperviserPhototsStatistics", new { area = @ViewBag.area, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
+            &nbsp;@Html.ActionLink("转到督导维度统计页", "SuperviserPhotosStatistics", new { area = @ViewBag.area, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
         </div>
         <div class="form-inline">
         </div>
@@ -133,14 +149,66 @@
         $(function () {
             $('[data-toggle="popover"]').popover();
             $("#starttime,#endtime").datepicker();
+
+            //
+            initproject();
+
+            $('#pifu').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var recipient = button.data('whatever') // Extract info from data-* attributes
+                var modal = $(this)
+                $("#pifuid").val(recipient);
+                $("#message-text").val('');     //clear value
+            })            
         })
-        $('#pifu').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('whatever') // Extract info from data-* attributes
-            var modal = $(this)
-            $("#pifuid").val(recipient);
-            $("#message-text").val('');     //clear value
+
+        function initproject() {
+            var mainproject = $("#mainproject").attr("mainproject");
+            var childproject = $("#childproject").attr("childproject");
+            $("#mainproject option").each(function () {
+                var obj = $(this);
+                if (obj.val() == mainproject) {
+                    obj.attr("selected", "selected");
+                    $("#mainproject").change();
+                }
+            });
+            
+            $("#childproject option").each(function () {
+                var obj = $(this);
+                if (obj.val() == childproject)
+                    obj.attr("selected", "selected");
+            });
+        }
+        
+        $("#mainproject").change(function () {
+            var mainid = $(this).val();
+            if (mainid < 1)
+                return false;
+            var childids = [];
+
+            switch (mainid) {
+                case "展厅布置":
+                    childids = ["物料", "展车", "广告机", "其他"];
+                    break;
+                case "营销活动":
+                    childids = ["车展", "中篷车", "县镇行动", "上市活动", "日常推广", "其他"];
+                    break;
+                case "培训会议":
+                    childids = ["区域会议", "单店会议", "培训", "其他"];
+                    break;
+                case "广宣资料":
+                    childids = ["发票照片", "投放照片", "其他"];
+                    break;
+                case "其他":
+                    childids = ["其他"];
+                    break;
+            }
+            $("#childproject option:gt(0)").remove();
+            for (var i in childids) {
+                $("#childproject").append($("<option/>").text(childids[i]).attr("value", childids[i]));
+            }
         })
+
         function tjpifu() {
             $("#save").attr("disabled");
             var postdata = { id: $("#pifuid").val(), content: $("#message-text").val() };
@@ -156,6 +224,7 @@
                 }
             });
         }
+        
         //function delog(cid) {
         //    if (confirm("确定删除？")) {
         //        var postdata = { id: cid };

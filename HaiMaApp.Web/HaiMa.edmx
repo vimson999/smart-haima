@@ -107,7 +107,7 @@
           <Property Name="Modifier" Type="varchar" MaxLength="50" />
           <Property Name="Modifytime" Type="datetime" />
           <Property Name="LoginId" Type="varchar" MaxLength="50" />
-          <Property Name="LoginPassword" Type="nchar" MaxLength="10" />
+          <Property Name="LoginPassword" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="StaffPosition">
           <Key>
@@ -604,7 +604,7 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserUploadPhotos' does not
           <Property Name="Modifier" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Modifytime" Type="DateTime" Precision="3" />
           <Property Name="LoginId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LoginPassword" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="LoginPassword" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="StaffPosition">
           <Key>

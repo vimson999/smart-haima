@@ -50,7 +50,19 @@
                     if (curentUser.ToLower() != "admin")
                     {
                         HaiMaApp db = new HaiMaApp();
-                        dudaomingzi = db.DuDaoRights.Where(d => d.mobile == curentUser).FirstOrDefault().DuDaoMingZi;
+                        var result = db.SuperAdmin.Where(d => d.username == curentUser && d.Status == true).FirstOrDefault();
+                        if (result != null){
+                            dudaomingzi = result.memo;
+                        }
+                        else { 
+                            var resultX = db.DuDaoRights.Where(d => d.mobile == curentUser && d.HasRights == true).FirstOrDefault();
+                            if (resultX != null){
+                                dudaomingzi = resultX.DuDaoMingZi;
+                            }
+                            else{
+                                X3.UtilX3.RemoveCookie("hmToken"); 
+                            }
+                        }
                     }                    
                 }                
                 <a class="blog-nav-item navbar-right"  href="~/account/logout">退出</a>
