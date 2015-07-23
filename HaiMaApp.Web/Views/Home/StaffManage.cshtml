@@ -43,6 +43,8 @@
                 }
             </tbody>
         </table>
+        @{string loginuser = X3.UtilX3.GetCookie("hmToken");}
+        <input type="hidden" id="loginuser" value="@loginuser" />
         <div>
             <div style="float:left;padding:10px 0">共 @Model.TotalPageCount 页 @Model.TotalItemCount 条</div>
             @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "pn", ShowPageIndexBox = true, CurrentPagerItemWrapperFormatString = "<span class=\"current\">{0}</span>" }, new { id = "badoopager" })<span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span>
@@ -106,7 +108,22 @@
                 data: postdata,
                 dataType: "json",
                 success: function (data) {
-                    location.href = "/home/StaffManage";
+                    if (data == "1") {   
+                        var loginuser = $("#loginuser").val();
+                        var mobile = $("#mobile").val();
+                        alert(loginuser);
+                        alert(mobile);
+                        if (loginuser == mobile) {
+                            alert("密码已修改，请使用新密码登录系统！");
+                            location.href = "/account/login";
+                        }
+                        else {
+                            location.href = "/home/StaffManage";
+                        }
+                    }
+                    else {
+                        location.href = "/home/StaffManage";
+                    }
                 }
             });
         }

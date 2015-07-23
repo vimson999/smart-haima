@@ -135,8 +135,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btn_dialogclose">关闭</button>
                         <button type="button" class="btn btn-primary" onclick="tjpifu()" id="save">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btn_dialogclose">取消</button>
                     </div>
                 </div>
             </div>
@@ -156,7 +156,7 @@
             $("#message-text").val('');     //clear value
         })
         function tjpifu() {
-            $("#save").attr("disabled");
+            $("#save").attr("disabled","disabled");
             var postdata = { id: $("#pifuid").val(), content: $("#message-text").val() };
             $.ajax({
                 type: "post",

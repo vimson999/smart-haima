@@ -26,17 +26,19 @@ namespace HaiMaApp.Web.Controllers
                 UtilX3.SetCookie("hmToken", UserName, 24 * 60);
                 return RedirectToAction("contact", "Home");
             }
+            ViewBag.islogin = 0;
 
-            var userDuDao = db.DuDaoRights.Where(u => u.mobile == UserName && u.Password == password && u.HasRights == true).FirstOrDefault();
-            if (userDuDao != null)
-            {
-                UtilX3.SetCookie("hmToken", UserName, 24 * 60);
-                return RedirectToAction("contact", "Home");
-            }
-            else
-            {
-                ViewBag.islogin = 0;
-            }
+            //督导禁止登录 by Lee 20150723
+            //var userDuDao = db.DuDaoRights.Where(u => u.mobile == UserName && u.Password == password && u.HasRights == true).FirstOrDefault();
+            //if (userDuDao != null)
+            //{
+            //    UtilX3.SetCookie("hmToken", UserName, 24 * 60);
+            //    return RedirectToAction("contact", "Home");
+            //}
+            //else
+            //{
+            //    ViewBag.islogin = 0;
+            //}
             
             return View();
         }
