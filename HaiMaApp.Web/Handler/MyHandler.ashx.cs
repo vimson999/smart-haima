@@ -101,8 +101,11 @@ namespace HaiMaApp.Web.Hanlder
                 case "updatepassword":                    //updatepassword by vim 20150719 
                     updatePassword(context);
                     break;
-                case "testtuisong":
-                    testTui(context);
+                case "testandroidtuisong":
+                    testAndroidTui(context);
+                    break;
+                case "testiostuisong":
+                    testIOSTui(context);
                     break;
                 default:
                     break;
@@ -1163,8 +1166,9 @@ namespace HaiMaApp.Web.Hanlder
         }
 
 
-        private void testTui(HttpContext context)
+        private void testAndroidTui(HttpContext context)
         {
+            //////// Android
             UMengMessagePush umPush = new UMengMessagePush("559f209e67e58e9460006075", "exh3fjeoumuk4tbqngbsnxown8uqyhdz");
             PostUMengJson postJson = new PostUMengJson();
 
@@ -1175,8 +1179,8 @@ namespace HaiMaApp.Web.Hanlder
             postJson.payload.display_type = "notification";
             postJson.payload.body = new ContentBody();
             postJson.payload.body.ticker = "ticker";
-            postJson.payload.body.title = "侬好哇";
-            postJson.payload.body.text = "text。。侬好哇。。侬好哇。";
+            postJson.payload.body.title = "Android 侬好哇";
+            postJson.payload.body.text = "Android。。侬好哇。。侬好哇。";
             postJson.payload.body.after_open = "go_custom";
             postJson.payload.body.custom = "comment-notify";
 
@@ -1186,7 +1190,43 @@ namespace HaiMaApp.Web.Hanlder
 
             ReturnJsonClass resu = umPush.SendMessage(postJson);
 
+
+            
             JavaScriptSerializer serializer = new JavaScriptSerializer();
+            var str = serializer.Serialize(resu);
+            context.Response.ContentType = "text/json;charset=UTF-8;";
+            context.Response.Write(str);
+        }
+
+        private void testIOSTui(HttpContext context)
+        {
+            //////// apple
+            var umPush = new UMengMessagePush("55a239b067e58e1a080075b7", "nqj7zbo88lfifcagcvs5adewnvkxqioi");
+            var postJson = new PostUMengJson();
+
+            //Atw_PkXzlbY0FkeJsx773xEcFol1Hp4ue3Fp0-7Fzg-p
+
+            postJson.type = "broadcast";
+            postJson.payload = new Payload();
+            postJson.payload.display_type = "notification";
+            postJson.payload.body = new ContentBody();
+            postJson.payload.body.ticker = "ticker";
+            postJson.payload.body.title = "apple 侬好哇";
+            postJson.payload.body.text = "apple text。。侬好哇。。侬好哇。";
+            postJson.payload.body.after_open = "go_custom";
+            postJson.payload.body.custom = "comment-notify";
+            
+            //postJson.payload.body.
+
+
+
+            postJson.description = "description-UID:" + 123;
+
+            postJson.thirdparty_id = "COMMENT";
+
+            var resu = umPush.SendMessage(postJson);
+
+            var serializer = new JavaScriptSerializer();
             var str = serializer.Serialize(resu);
             context.Response.ContentType = "text/json;charset=UTF-8;";
             context.Response.Write(str);
