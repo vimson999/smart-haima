@@ -36,7 +36,7 @@ namespace HaiMaApp.Web.Hanlder
                 case "deletetongxunlu":
                     deletetongxunlu(context);
                     break;
-                case "gettongzhilist":
+                case "gettongzhilist":              //弃用 使用gettongzhilistnew
                     gettongzhilist(context);
                     break;
                 case "gettongzhilistnew":

@@ -337,6 +337,7 @@ namespace HaiMaApp.Web.Controllers
         //copy from myhandler 
         private void testTui(string title, string text)
         {
+            //push andriod
             UMengMessagePush umPush = new UMengMessagePush("559f209e67e58e9460006075", "exh3fjeoumuk4tbqngbsnxown8uqyhdz");
             PostUMengJson postJson = new PostUMengJson();
 
@@ -356,6 +357,27 @@ namespace HaiMaApp.Web.Controllers
             postJson.thirdparty_id = "COMMENT";
 
             ReturnJsonClass resu = umPush.SendMessage(postJson);
+
+            //push ios
+            umPush = new UMengMessagePush("55a239b067e58e1a080075b7", "exh3fjeoumuk4tbqngbsnxown8uqyhdz");
+            postJson = new PostUMengJson();
+
+            //Atw_PkXzlbY0FkeJsx773xEcFol1Hp4ue3Fp0-7Fzg-p
+
+            postJson.type = "broadcast";
+            postJson.payload = new Payload();
+            postJson.payload.display_type = "notification";
+            postJson.payload.body = new ContentBody();
+            postJson.payload.body.ticker = "ticker";
+            postJson.payload.body.title = title;//"侬好哇";
+            postJson.payload.body.text = text;//"text。。侬好哇。。侬好哇。";
+            postJson.payload.body.after_open = "go_custom";
+            postJson.payload.body.custom = "comment-notify";
+
+            postJson.description = "description-UID:" + 123;
+            postJson.thirdparty_id = "COMMENT";
+
+            resu = umPush.SendMessage(postJson);
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             var str = serializer.Serialize(resu);
@@ -777,7 +799,7 @@ namespace HaiMaApp.Web.Controllers
             return Json("1");
         }
 
-        //更新员工登录密码 by Lee 20150720
+        //更新员工登录密码 by Lee 20150720  
         public ActionResult ModifyPassword(string mobile, string password)
         {
             var staff = db.Staff.Where(c => c.Mobile == mobile).FirstOrDefault();
@@ -804,6 +826,7 @@ namespace HaiMaApp.Web.Controllers
                     password = password
                 });
             }
+
             return Json("1");
         }
 
@@ -1075,7 +1098,7 @@ namespace HaiMaApp.Web.Controllers
                                        t.uploaddate < endtime);
             }
 
-            var model = query.OrderBy(t => t.StaffName).OrderByDescending(t => t.uploaddate)
+            var model = query.OrderByDescending(t => t.uploaddate)
                              .ToPagedList(pn, 10);
 
             ViewBag.starttime = starttime.HasValue ? starttime.Value.ToString("yyyy-MM-dd") : "";
@@ -1374,7 +1397,7 @@ namespace HaiMaApp.Web.Controllers
                                        t.uploaddate < endtime);
             }
 
-            var model = query.OrderBy(t => t.StaffName).OrderByDescending(t => t.uploaddate)
+            var model = query.OrderByDescending(t => t.uploaddate)
                              .ToPagedList(pn, 10);
 
             ViewBag.starttime = starttime.HasValue ? starttime.Value.ToString("yyyy-MM-dd") : "";
