@@ -26,9 +26,10 @@
                     <span class="input-group-addon" id="sizing-addon6">结束时间:</span>
                     <input type="text" name="endtime" id="endtime" class="form-control" aria-describedby="sizing-addon6" value="@ViewBag.endtime" />
                 </div>
+                <input type="hidden" name="dudaomz" id="dudaomz" value="@ViewBag.dudaomz" />
                 <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
-                                @Html.ActionLink("导出excel", "dudaologToExcel", new { dm = @ViewBag.dm, dudaomz = @ViewBag.dudaomz, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
-                <input type="button" class="form-control goback" style="margin:0px 5px; " value="转到督导维度统计页" />
+                @Html.ActionLink("导出excel", "dudaologToExcel", new { area = @ViewBag.area, dm = ( @ViewBag.dm=="请输入关键字"?"":@ViewBag.dm), dudaomz = @ViewBag.dudaomz, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
+                &nbsp;@Html.ActionLink("转到督导维度统计页", "SuperviserStatistics", new { area = @ViewBag.area, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
             </div>
             <div class="form-inline">
 
@@ -76,10 +77,13 @@
                                 foreach (var p in listtp)
                                 {
                                     <div class="col-md-1">
-                                        <a tabindex="0" role="button" data-toggle="modal" data-target="#myModal@{@p.id}"><img title="点击看大图" src="../../ChuChaiRiZhi/@p.pic_name" style="max-width:60px;" /></a>
+                                        <a tabindex="0" role="button" data-toggle="modal" data-target="#myModal@{@p.id}"><img title="点击看大图" src="../../ChuChaiRiZhi/@p.pic_name" style="width:80px;height:60px;" /></a>
                                         <div class="modal fade" id="myModal@{@p.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
+                                                    <div class="modal-header" style="border:0px;">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    </div>
                                                     <div class="modal-body">
                                                         <img style="max-width:570px;" src="../../ChuChaiRiZhi/@p.pic_name">
                                                     </div>
@@ -166,18 +170,18 @@
                 }
             });
         }
-        function delog(cid) {
-            if (confirm("确定删除？")) {
-                var postdata = { id: cid };
-                $.ajax({
-                    type: "post",
-                    url: "DeleteLog",
-                    data: postdata,
-                    dataType: "json",
-                    success: function (data) {
-                        location.reload();
-                    }
-                });
-            }
-        }
+        //function delog(cid) {
+        //    if (confirm("确定删除？")) {
+        //        var postdata = { id: cid };
+        //        $.ajax({
+        //            type: "post",
+        //            url: "DeleteLog",
+        //            data: postdata,
+        //            dataType: "json",
+        //            success: function (data) {
+        //                location.reload();
+        //            }
+        //        });
+        //    }
+        //}
     </script>

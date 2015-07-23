@@ -43,5 +43,9 @@ namespace HaiMaApp.Web
         public virtual DbSet<View_SuperviserStatisticsTripLog> View_SuperviserStatisticsTripLog { get; set; }
         public virtual DbSet<Area> Area { get; set; }
         public virtual DbSet<Province> Province { get; set; }
+        public virtual DbSet<View_AreaPhotosStatistics> View_AreaPhotosStatistics { get; set; }
+        public virtual DbSet<View_SuperviserPhotosStatistics> View_SuperviserPhotosStatistics { get; set; }
+        public virtual DbSet<View_SuperviserUploadPhotos> View_SuperviserUploadPhotos { get; set; }
+        public virtual DbSet<PiFuOnPictureUpload> PiFuOnPictureUpload { get; set; }
     }
 }

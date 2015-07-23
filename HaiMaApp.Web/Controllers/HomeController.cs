@@ -8,6 +8,9 @@ using EntityFramework.Extensions;
 using X3;
 using System.Text;
 using System.IO;
+using NSTool.UMengPush;
+using NSTool.UMengPush.Core;
+using System.Web.Script.Serialization;
 
 namespace HaiMaApp.Web.Controllers
 {
@@ -19,7 +22,8 @@ namespace HaiMaApp.Web.Controllers
         string inputKeyword = "请输入关键字";
 
         #region tongxunlu
-        public ActionResult Contact(int pn = 1, string kword = null, string quyuorder = null, string dudaomingziorder = null, string zongjingliorder = null)
+        public ActionResult Contact(int pn = 1, string kword = null, string quyuorder = null, string dudaomingziorder = null, string zongjingliorder = null,
+                                    string xiaoshoujingliorder = null, string shichangjingliorder = null)
         {
             var query = db.NewTongXunLu.AsQueryable();
             if (!string.IsNullOrWhiteSpace(kword))
@@ -56,8 +60,24 @@ namespace HaiMaApp.Web.Controllers
                 else
                     query = query.OrderBy(c => c.ZongJingLi);
             }
+            if (!string.IsNullOrWhiteSpace(xiaoshoujingliorder))
+            {
+                if (xiaoshoujingliorder.ToLower() == "desc")
+                    query = query.OrderByDescending(c => c.XiaoShouJingLi);
+                else
+                    query = query.OrderBy(c => c.XiaoShouJingLi);
+            }
+            if (!string.IsNullOrWhiteSpace(shichangjingliorder))
+            {
+                if (shichangjingliorder.ToLower() == "desc")
+                    query = query.OrderByDescending(c => c.ShiChangJingLi);
+                else
+                    query = query.OrderBy(c => c.ShiChangJingLi);
+            }
 
-            if (string.IsNullOrWhiteSpace(quyuorder) && string.IsNullOrWhiteSpace(dudaomingziorder) && string.IsNullOrWhiteSpace(zongjingliorder))
+            if (string.IsNullOrWhiteSpace(quyuorder) && string.IsNullOrWhiteSpace(dudaomingziorder) &&
+                string.IsNullOrWhiteSpace(zongjingliorder) && string.IsNullOrWhiteSpace(xiaoshoujingliorder) &&
+                string.IsNullOrWhiteSpace(shichangjingliorder))
             {
                 query = query.OrderByDescending(c => c.id);
             }
@@ -71,12 +91,33 @@ namespace HaiMaApp.Web.Controllers
 
         public ActionResult AddContact()
         {
-            string curentUser = UtilX3.GetCookie("hmToken");
-            if (curentUser.ToLower() != "admin")
-            {
-                ViewBag.Mobile = curentUser;
-                ViewBag.DuDaoMingZi = db.DuDaoRights.Where(d => d.mobile == curentUser).FirstOrDefault().DuDaoMingZi;
-            }
+            //var curentUser = UtilX3.GetCookie("hmToken");
+            //ViewBag.Mobile = curentUser;
+
+            ////modify by Lee 20150722
+            //var result = db.SuperAdmin.Where(d => d.username.ToString().ToLower() == curentUser.ToLower()).FirstOrDefault();
+            //if (result != null)
+            //{
+            //    ViewBag.DuDaoMingZi = result.username;
+            //}
+            //else
+            //{
+            //    var resultX = db.DuDaoRights.Where(d => d.mobile == curentUser && d.HasRights == true).FirstOrDefault();
+            //    if (resultX != null)
+            //    {
+            //        ViewBag.DuDaoMingZi = resultX.DuDaoMingZi;
+            //    }
+            //    else
+            //    {
+
+            //    }
+            //}
+
+            //if (curentUser.ToLower() != "admin")
+            //{
+            //    ViewBag.Mobile = curentUser;
+            //    ViewBag.DuDaoMingZi = db.DuDaoRights.Where(d => d.mobile == curentUser).FirstOrDefault().DuDaoMingZi;
+            //}
             return View();
         }
 
@@ -205,6 +246,19 @@ namespace HaiMaApp.Web.Controllers
             db.SaveChanges();
             // return RedirectToAction("notice");
 
+            //调通知接口
+            if (ispublish == 1)
+            {
+                try
+                {
+                    testTui(title, content);
+                }
+                catch (Exception ex)
+                {
+                    LogX3.Error("Addnotice-testTui:" + ex.Message + ex.StackTrace);
+                }
+            }
+
             return Json("1");
         }
 
@@ -226,6 +280,20 @@ namespace HaiMaApp.Web.Controllers
 
             //  return RedirectToAction("notice");
 
+            //调通知接口
+            if (ispublish == 1)
+            {
+                try
+                {
+                    testTui(title, content);
+                }
+                catch (Exception ex)
+                {
+                    LogX3.Error("Editnotice-testTui:" + ex.Message + ex.StackTrace);
+                }
+            }
+
+
             return Json("1");
         }
 
@@ -239,6 +307,24 @@ namespace HaiMaApp.Web.Controllers
                 IsPublish = ispublish == 1 ? false : true
             });
 
+            //调通知接口
+            if (ispublish != 1)
+            {
+                var tongzhi = db.TongZhi.Where(c => c.id == id).FirstOrDefault();
+                if (tongzhi != null)
+                {
+                    try
+                    {
+                        testTui(tongzhi.title, tongzhi.content);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogX3.Error("PublishNotice-testTui:" + ex.Message + ex.StackTrace);
+                    }
+                }
+            }
+
+
             return Json("1");
         }
 
@@ -247,6 +333,36 @@ namespace HaiMaApp.Web.Controllers
             db.TongZhi.Where(c => c.id == id).Delete();
             return Json("1");
         }
+
+        //copy from myhandler 
+        private void testTui(string title, string text)
+        {
+            UMengMessagePush umPush = new UMengMessagePush("559f209e67e58e9460006075", "exh3fjeoumuk4tbqngbsnxown8uqyhdz");
+            PostUMengJson postJson = new PostUMengJson();
+
+            //Atw_PkXzlbY0FkeJsx773xEcFol1Hp4ue3Fp0-7Fzg-p
+
+            postJson.type = "broadcast";
+            postJson.payload = new Payload();
+            postJson.payload.display_type = "notification";
+            postJson.payload.body = new ContentBody();
+            postJson.payload.body.ticker = "ticker";
+            postJson.payload.body.title = title;//"侬好哇";
+            postJson.payload.body.text = text;//"text。。侬好哇。。侬好哇。";
+            postJson.payload.body.after_open = "go_custom";
+            postJson.payload.body.custom = "comment-notify";
+
+            postJson.description = "description-UID:" + 123;
+            postJson.thirdparty_id = "COMMENT";
+
+            ReturnJsonClass resu = umPush.SendMessage(postJson);
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            var str = serializer.Serialize(resu);
+
+            LogX3.Info(DateTime.Now + "-testTui" + str);
+        }
+
         #endregion
 
         #region dudaoPictureUpload  & dudaolog
@@ -499,18 +615,19 @@ namespace HaiMaApp.Web.Controllers
 
         public ActionResult AddStaff()
         {
-            string curentUser = UtilX3.GetCookie("hmToken");
-            if (curentUser.ToLower() != "admin")
-            {
-                ViewBag.Mobile = curentUser;
-                ViewBag.DuDaoMingZi = db.DuDaoRights.Where(d => d.mobile == curentUser).FirstOrDefault().DuDaoMingZi;
-            }
+            //string curentUser = UtilX3.GetCookie("hmToken");
+            //if (curentUser.ToLower() != "admin")
+            //{
+            //    ViewBag.Mobile = curentUser;
+            //    ViewBag.DuDaoMingZi = db.DuDaoRights.Where(d => d.mobile == curentUser).FirstOrDefault().DuDaoMingZi;
+            //}
             return View();
         }
 
         [HttpPost]
         public ActionResult AddStaff(string staffName, string mobile, string area, string position)
         {
+            var password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6);
             var model = new Staff()
                 {
                     StaffName = staffName,
@@ -518,10 +635,24 @@ namespace HaiMaApp.Web.Controllers
                     Area = area,
                     Position = position,
                     Creator = string.IsNullOrEmpty(UtilX3.GetCookie("hmToken")) ? "" : UtilX3.GetCookie("hmToken"),
-                    Createtime = DateTime.Now
+                    Createtime = DateTime.Now,
+                    LoginId = mobile,
+                    LoginPassword = password
                 };
-
+            //有，删
+            db.Staff.Where(t => t.Mobile == mobile).Delete();
+            //删完，增
             db.Staff.Add(model);
+
+            //DuDaoRights，SuperAdmin都先置无效，再新增
+            db.DuDaoRights.Where(t => t.mobile == mobile).Update(t => new DuDaoRights
+            {
+                HasRights = false
+            });
+            db.SuperAdmin.Where(t => t.username == mobile).Update(t => new SuperAdmin
+            {
+                Status = false
+            });
 
             //如果是督导，向DuDaoRights表写数据；如果是大区经理，向SuperAdmin表写数据
             if (position.Contains("督导"))
@@ -530,9 +661,10 @@ namespace HaiMaApp.Web.Controllers
                 {
                     DuDaoMingZi = staffName,
                     mobile = mobile,
-                    Password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6),
+                    Password = password,
                     HasRights = true
                 };
+
                 db.DuDaoRights.Add(dudao);
             }
             else if (position.Contains("经理"))
@@ -540,10 +672,11 @@ namespace HaiMaApp.Web.Controllers
                 var admin = new SuperAdmin()
                 {
                     username = mobile,
-                    password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6),
+                    password = password,
                     Status = true,
                     memo = staffName
                 };
+
                 db.SuperAdmin.Add(admin);
             }
 
@@ -564,6 +697,7 @@ namespace HaiMaApp.Web.Controllers
         {
             //找到原始的数据，置无效
             var oldData = db.Staff.Where(t => t.Id == id).FirstOrDefault();
+            var password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6);
 
             //更新staff表
             db.Staff.Where(t => t.Id == id).Update(t => new Staff
@@ -573,30 +707,46 @@ namespace HaiMaApp.Web.Controllers
                 Area = area,
                 Position = position,
                 Modifier = string.IsNullOrEmpty(UtilX3.GetCookie("hmToken")) ? "" : UtilX3.GetCookie("hmToken"),
-                Modifytime = DateTime.Now
+                Modifytime = DateTime.Now,
+                LoginId = mobile,
+                LoginPassword = password
             });
 
             //如果是督导，向DuDaoRights表更新数据；如果是大区经理，向SuperAdmin表更新数据
+            //DuDaoRights，SuperAdmin都先置无效，再新增
+            db.DuDaoRights.Where(t => t.mobile == oldData.Mobile).Update(t => new DuDaoRights
+            {
+                HasRights = false
+            });
+            db.SuperAdmin.Where(t => t.username == oldData.Mobile).Update(t => new SuperAdmin
+            {
+                Status = false
+            });
+
             if (position.Contains("督导"))
             {
-                db.DuDaoRights.Where(t => t.mobile == oldData.Mobile).Update(t => new DuDaoRights
+                var dudao = new DuDaoRights()
                 {
                     DuDaoMingZi = staffName,
                     mobile = mobile,
-                    Password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6),
+                    Password = password,
                     HasRights = true
-                });
+                };
+                db.DuDaoRights.Add(dudao);
             }
             else if (position.Contains("经理"))
             {
-                db.SuperAdmin.Where(t => t.username == oldData.Mobile).Update(t => new SuperAdmin
+                var admin = new SuperAdmin()
                 {
                     username = mobile,
-                    password = string.IsNullOrWhiteSpace(mobile) ? "" : mobile.Substring(mobile.Length - 6),
+                    password = password,
                     Status = true,
                     memo = staffName
-                });
+                };
+                db.SuperAdmin.Add(admin);
             }
+
+            db.SaveChanges();
 
             // return RedirectToAction("StaffManage");
             return Json("1");
@@ -626,15 +776,110 @@ namespace HaiMaApp.Web.Controllers
 
             return Json("1");
         }
+
+        //更新员工登录密码 by Lee 20150720
+        public ActionResult ModifyPassword(string mobile, string password)
+        {
+            var staff = db.Staff.Where(c => c.Mobile == mobile).FirstOrDefault();
+
+            db.Staff.Where(c => c.Mobile == mobile).Update(t => new Staff
+            {
+                LoginPassword = password,
+                Modifier = string.IsNullOrEmpty(UtilX3.GetCookie("hmToken")) ? "" : UtilX3.GetCookie("hmToken"),
+                Modifytime = DateTime.Now
+            });
+
+            //如果是督导，向DuDaoRights表更新数据；如果是大区经理，向SuperAdmin表更新数据
+            if (staff.Position.Contains("督导"))
+            {
+                db.DuDaoRights.Where(t => t.mobile == staff.Mobile).Update(t => new DuDaoRights
+                {
+                    Password = password
+                });
+            }
+            else if (staff.Position.Contains("经理"))
+            {
+                db.SuperAdmin.Where(t => t.username == staff.Mobile).Update(t => new SuperAdmin
+                {
+                    password = password
+                });
+            }
+            return Json("1");
+        }
+
         #endregion
 
         #region superviser's trip log by Lee 20150714
+        //按区域维度统计督导出差日志
         public ActionResult AreaStatistics(int pn = 1, string keyword = null, DateTime? starttime = null, DateTime? endtime = null,
                                            string areaorder = null, string countlogorder = null)
         {
+            var areastr = !string.IsNullOrWhiteSpace(keyword) ? string.Format("AND tmp.Area LIKE '%{0}%'", keyword) : "";
+            var orderstr = " tmp.CountLog DESC";
+            orderstr = !string.IsNullOrWhiteSpace(areaorder) ? string.Format(" tmp.Area {0}", areaorder) : orderstr;
+            orderstr = !string.IsNullOrWhiteSpace(countlogorder) ? string.Format(" tmp.CountLog {1}", countlogorder) : orderstr;
+
+            var starttimestr = "";
+            var endtimestr = "";
+            if (endtime.HasValue)
+            {
+                endtime = Convert.ToDateTime(endtime).AddDays(1);
+            }
+            //默认近一个月
+            if (!starttime.HasValue && !endtime.HasValue)
+            {
+                var now = DateTime.Today.AddDays(1);
+                starttime = now.AddMonths(-1);
+                endtime = now;
+            }
+
+            starttimestr = starttime.HasValue ? string.Format("AND UploadDate >= '{0}'", starttime) : "";
+            endtimestr = endtime.HasValue ? string.Format("AND UploadDate < '{0}'", Convert.ToDateTime(endtime)) : "";
+
+            var commandText = string.Format(@"SELECT * FROM
+                                            (
+	                                            SELECT A.AreaName AS Area,ISNULL(SUM(S.CountLog),0) AS CountLog
+	                                            FROM Area A
+	                                            LEFT JOIN 
+	                                            (
+		                                            SELECT * 
+		                                            FROM View_AreaStatisticsTripLog
+		                                            WHERE 1 = 1
+                                                    {0} {1}
+	                                            ) S ON A.AreaName = S.Area
+	                                            WHERE  A.Satus = 1
+	                                            GROUP BY A.AreaName
+                                            )tmp 
+                                            WHERE 1=1 {2}
+                                            ORDER BY {3}", starttimestr, endtimestr, areastr, orderstr);
+            var datasource = SqlHelper.ExecuteDataset(System.Configuration.ConfigurationManager.ConnectionStrings["conn"].ToString(), System.Data.CommandType.Text, commandText);
+
+            var model = new List<View_AreaStatisticsTripLog>();
+
+            if (datasource != null && datasource.Tables.Count > 0)
+            {
+                var lists = new List<View_AreaStatisticsTripLog>();
+                for (int i = 0; i < datasource.Tables[0].Rows.Count; i++)
+                {
+                    lists.Add(new View_AreaStatisticsTripLog()
+                    {
+                        Area = datasource.Tables[0].Rows[i]["Area"].ToString(),
+                        CountLog = Int32.Parse(datasource.Tables[0].Rows[i]["CountLog"].ToString())
+                    });
+                }
+
+                model = lists.AsEnumerable().ToPagedList(pn, 10);
+            }
+
+            ViewBag.starttime = starttime.HasValue ? starttime.Value.ToString("yyyy-MM-dd") : "";
+            ViewBag.endtime = endtime.HasValue ? endtime.Value.AddDays(-1).ToString("yyyy-MM-dd") : "";
+            ViewBag.keyword = string.IsNullOrWhiteSpace(keyword) ? inputKeyword : keyword;
+
+            return View(model);
+
+            #region todo delete
+            /*
             var query = db.View_AreaStatisticsTripLog.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(keyword))
-                query = query.Where(t => t.Area.Contains(keyword));
             if (starttime.HasValue)
                 query = query.Where(t => t.UploadDate >= starttime);
             if (endtime.HasValue)
@@ -653,32 +898,42 @@ namespace HaiMaApp.Web.Controllers
             }
 
             //groupby
-            var queryX = (from r in db.Area
+            var queryY = (from r in db.Area
                           join s in query on r.AreaName equals s.Area into union
                           from v in union.DefaultIfEmpty()
                           select new
                           {
                               Area = r.AreaName,
-                              CountLog = v == null ? 0 : v.CountLog,
-                              UploadDate = v == null ? null : v.UploadDate,
-                              ID = v == null ? 0 : v.ID
-                          }).GroupBy(t => new { t.Area,t.CountLog });
+                              CountLog = v == null ? 0 : v.CountLog
+                          }).GroupBy(t => new { t.Area, t.CountLog });
+
+            var queryX = from q in queryY.AsEnumerable()
+                         group q by q.Key.Area into ultimate
+                         select new
+                         {
+                             Area = ultimate.Key,
+                             CountLog = ultimate.Sum(q => q.Key.CountLog)
+                         };
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+                queryX = queryX.Where(t => t.Area == keyword);
+
 
             queryX.ToList().ForEach(t => new View_AreaStatisticsTripLog
             {
-                Area = t.Key.Area,
-                CountLog = t.Count()
+                Area = t.Area,
+                CountLog = t.CountLog
             });
 
             if (string.IsNullOrWhiteSpace(areaorder) && string.IsNullOrWhiteSpace(countlogorder))
-                queryX = queryX.OrderBy(t => t.Key.Area);
+                queryX = queryX.OrderBy(t => t.Area);
 
             var list = new List<View_AreaStatisticsTripLog>();
             foreach (var item in queryX.AsEnumerable())
             {
                 var area = new View_AreaStatisticsTripLog();
-                area.Area = item.Key.Area;
-                area.CountLog = item.Key.CountLog;
+                area.Area = item.Area;
+                area.CountLog = item.CountLog;
                 list.Add(area);
             };
 
@@ -703,9 +958,11 @@ namespace HaiMaApp.Web.Controllers
             ViewBag.endtime = endtime.HasValue ? endtime.Value.AddDays(-1).ToString("yyyy-MM-dd") : "";
             ViewBag.keyword = string.IsNullOrWhiteSpace(keyword) ? inputKeyword : keyword;
 
-            return View(model);
+            return View(model);*/
+            #endregion
         }
 
+        //按督导维度统计督导出差日志
         public ActionResult SuperviserStatistics(int pn = 1, string keyword = null, string area = null, DateTime? starttime = null, DateTime? endtime = null,
                                                 string stafforder = null, string countlogorder = null)
         {
@@ -715,6 +972,7 @@ namespace HaiMaApp.Web.Controllers
                                     t.Mobile.Contains(keyword));
             if (!string.IsNullOrWhiteSpace(area))
                 query = query.Where(t => t.Area == area);
+
             if (starttime.HasValue)
                 query = query.Where(t => t.UploadDate >= starttime);
             if (endtime.HasValue)
@@ -725,7 +983,7 @@ namespace HaiMaApp.Web.Controllers
             //默认近一个月
             if (!starttime.HasValue && !endtime.HasValue)
             {
-                var now = DateTime.Now;
+                var now = DateTime.Today.AddDays(1);
                 starttime = now.AddMonths(-1);
                 endtime = now;
                 query = query.Where(t => t.UploadDate >= starttime &&
@@ -733,40 +991,28 @@ namespace HaiMaApp.Web.Controllers
             }
 
             //groupby
-            var queryX = (from r in db.Area
-                          join s in query on r.AreaName equals s.Area into union
-                          from v in union.DefaultIfEmpty()
-                          where (v !=null && v.StaffName !=null)
-                          select new 
-                          {
-                              Area = r.AreaName,
-                              CountLog = v == null ? 0 : v.CountLog,
-                              UploadDate = v == null ? null : v.UploadDate,
-                              ID = v == null ? 0 : v.ID,
-                              StaffName = v == null ? "--" : v.StaffName,
-                              Mobile = v == null ? "--" : v.Mobile
-                          }).GroupBy(t => new { t.Area, t.StaffName, t.Mobile,t.CountLog });
-
-            queryX.ToList().ForEach(t => new View_SuperviserStatisticsTripLog
-            {
-                Area = t.Key.Area,
-                StaffName = t.Key.StaffName,
-                Mobile = t.Key.Mobile,
-                CountLog = t.Key.CountLog
-            });
-
+            var queryX = from q in query.AsEnumerable()
+                         group q by new { q.Area, q.StaffName, q.Mobile } into ultimate
+                         select new
+                         {
+                             Area = ultimate.Key.Area,
+                             StaffName = ultimate.Key.StaffName,
+                             Mobile = ultimate.Key.Mobile,
+                             CountLog = ultimate.Sum(q => q.CountLog)
+                         };
+            
             if (string.IsNullOrWhiteSpace(stafforder) && string.IsNullOrWhiteSpace(countlogorder))
-                queryX = queryX.OrderBy(t => t.Key.StaffName);
+                queryX = queryX.OrderBy(t => t.StaffName);
 
 
             var list = new List<View_SuperviserStatisticsTripLog>();
             foreach (var item in queryX.AsEnumerable())
             {
                 var superviser = new View_SuperviserStatisticsTripLog();
-                superviser.Area = item.Key.Area;
-                superviser.StaffName = item.Key.StaffName;
-                superviser.Mobile = item.Key.Mobile;
-                superviser.CountLog = item.Count();
+                superviser.Area = item.Area;
+                superviser.StaffName = item.StaffName;
+                superviser.Mobile = item.Mobile;
+                superviser.CountLog = item.CountLog;
                 list.Add(superviser);
             };
 
@@ -790,10 +1036,13 @@ namespace HaiMaApp.Web.Controllers
             ViewBag.starttime = starttime.HasValue ? starttime.Value.ToString("yyyy-MM-dd") : "";
             ViewBag.endtime = endtime.HasValue ? endtime.Value.AddDays(-1).ToString("yyyy-MM-dd") : "";
             ViewBag.keyword = string.IsNullOrWhiteSpace(keyword) ? inputKeyword : keyword;
+            ViewBag.area = string.IsNullOrWhiteSpace(area) ? "" : area;
 
             return View(model);
         }
-        public ActionResult TripLogDetail(int pn = 1, string dm = null, string dudaomz = null, DateTime? starttime = null, DateTime? endtime = null)
+
+        //督导出差日志详细
+        public ActionResult TripLogDetail(int pn = 1, string area = null, string dm = null, string dudaomz = null, DateTime? starttime = null, DateTime? endtime = null)
         {
             var query = db.View_SuperviserTripLog.AsQueryable();
             if (!string.IsNullOrWhiteSpace(dm))
@@ -833,10 +1082,320 @@ namespace HaiMaApp.Web.Controllers
             ViewBag.endtime = endtime.HasValue ? endtime.Value.AddDays(-1).ToString("yyyy-MM-dd") : "";
             ViewBag.dm = string.IsNullOrWhiteSpace(dm) ? inputKeyword : dm;
             ViewBag.dudaomz = string.IsNullOrWhiteSpace(dudaomz) ? inputKeyword : dudaomz;
+            ViewBag.area = string.IsNullOrWhiteSpace(area) ? "" : area;
 
             return View(model);
         }
 
+
+
+        #endregion
+
+        #region superviser's upload photos by Lee 20150721
+        //按区域维度统计督导上传照片
+        public ActionResult AreaPhotosStatistics(int pn = 1, string keyword = null, DateTime? starttime = null, DateTime? endtime = null,
+                                                 string areaorder = null, string countlogorder = null)
+        {
+            var areastr = !string.IsNullOrWhiteSpace(keyword) ? string.Format("AND tmp.Area LIKE '%{0}%'", keyword) : "";
+            var orderstr = " tmp.CountLog DESC";
+            orderstr = !string.IsNullOrWhiteSpace(areaorder) ? string.Format(" tmp.Area {0}", areaorder) : orderstr;
+            orderstr = !string.IsNullOrWhiteSpace(countlogorder) ? string.Format(" tmp.CountLog {1}", countlogorder) : orderstr;
+
+            var starttimestr = "";
+            var endtimestr = "";
+            if (endtime.HasValue)
+            {
+                endtime = Convert.ToDateTime(endtime).AddDays(1);
+            }
+            //默认近一个月
+            if (!starttime.HasValue && !endtime.HasValue)
+            {
+                var now = DateTime.Today.AddDays(1);
+                starttime = now.AddMonths(-1);
+                endtime = now;
+            }
+
+            starttimestr = starttime.HasValue ? string.Format("AND UploadDate >= '{0}'", starttime) : "";
+            endtimestr = endtime.HasValue ? string.Format("AND UploadDate < '{0}'", Convert.ToDateTime(endtime)) : "";
+
+            var commandText = string.Format(@"SELECT * FROM
+                                            (
+	                                            SELECT A.AreaName AS Area,ISNULL(SUM(S.CountLog),0) AS CountLog
+	                                            FROM Area A
+	                                            LEFT JOIN 
+	                                            (
+		                                            SELECT * 
+		                                            FROM View_AreaPhotosStatistics
+		                                            WHERE 1 = 1
+                                                    {0} {1}
+	                                            ) S ON A.AreaName = S.Area
+	                                            WHERE  A.Satus = 1
+	                                            GROUP BY A.AreaName
+                                            )tmp 
+                                            WHERE 1=1 {2}
+                                            ORDER BY {3}", starttimestr, endtimestr, areastr, orderstr);
+            var datasource = SqlHelper.ExecuteDataset(System.Configuration.ConfigurationManager.ConnectionStrings["conn"].ToString(), System.Data.CommandType.Text, commandText);
+
+            var model = new List<View_AreaPhotosStatistics>();
+
+            if (datasource != null && datasource.Tables.Count > 0)
+            {
+                var lists = new List<View_AreaPhotosStatistics>();
+                for (int i = 0; i < datasource.Tables[0].Rows.Count; i++)
+                {
+                    lists.Add(new View_AreaPhotosStatistics()
+                    {
+                        Area = datasource.Tables[0].Rows[i]["Area"].ToString(),
+                        CountLog = Int32.Parse(datasource.Tables[0].Rows[i]["CountLog"].ToString())
+                    });
+                }
+
+                model = lists.AsEnumerable().ToPagedList(pn, 10);
+            }
+
+            ViewBag.starttime = starttime.HasValue ? starttime.Value.ToString("yyyy-MM-dd") : "";
+            ViewBag.endtime = endtime.HasValue ? endtime.Value.AddDays(-1).ToString("yyyy-MM-dd") : "";
+            ViewBag.keyword = string.IsNullOrWhiteSpace(keyword) ? inputKeyword : keyword;
+
+            return View(model);
+
+            #region todo delete
+            /*
+            var query = db.View_AreaPhotosStatistics.AsQueryable();
+            if (starttime.HasValue)
+                query = query.Where(t => t.UploadDate >= starttime);
+            if (endtime.HasValue)
+            {
+                endtime = Convert.ToDateTime(endtime).AddDays(1);
+                query = query.Where(t => t.UploadDate < endtime);
+            }
+            //默认近一个月
+            if (!starttime.HasValue && !endtime.HasValue)
+            {
+                var now = DateTime.Now;
+                starttime = now.AddMonths(-1);
+                endtime = now;
+                query = query.Where(t => t.UploadDate >= starttime &&
+                                       t.UploadDate < endtime);
+            }
+
+            //groupby
+            var queryY = (from r in db.Area
+                          join s in query on r.AreaName equals s.Area into union
+                          from v in union.DefaultIfEmpty()
+                          select new
+                          {
+                              Area = r.AreaName,
+                              CountLog = v == null ? 0 : v.CountLog
+                          }).GroupBy(t => new { t.Area, t.CountLog });
+
+
+            var queryX = from q in queryY.AsEnumerable()
+                         group q by q.Key.Area into ultimate
+                         select new
+                         {
+                             Area = ultimate.Key,
+                             CountLog = ultimate.Sum(q => q.Key.CountLog)
+                         };
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+                queryX = queryX.Where(t => t.Area == keyword);
+
+            queryX.ToList().ForEach(t => new View_AreaPhotosStatistics
+            {
+                Area = t.Area,
+                CountLog = t.CountLog
+            });
+
+            if (string.IsNullOrWhiteSpace(areaorder) && string.IsNullOrWhiteSpace(countlogorder))
+                queryX = queryX.OrderBy(t => t.Area);
+
+            var list = new List<View_AreaPhotosStatistics>();
+            foreach (var item in queryX.AsEnumerable())
+            {
+                var area = new View_AreaPhotosStatistics();
+                area.Area = item.Area;
+                area.CountLog = item.CountLog;
+                list.Add(area);
+            };
+
+            if (!string.IsNullOrWhiteSpace(areaorder))
+            {
+                if (areaorder == "desc")
+                    list = list.OrderByDescending(t => t.Area).ToList();
+                else
+                    list = list.OrderBy(t => t.Area).ToList();
+            }
+            if (!string.IsNullOrWhiteSpace(countlogorder))
+            {
+                if (countlogorder == "desc")
+                    list = list.OrderByDescending(t => t.CountLog).ToList();
+                else
+                    list = list.OrderBy(t => t.CountLog).ToList();
+            }
+
+            var model = list.AsEnumerable().ToPagedList(pn, 10);
+
+            ViewBag.starttime = starttime.HasValue ? starttime.Value.ToString("yyyy-MM-dd") : "";
+            ViewBag.endtime = endtime.HasValue ? endtime.Value.ToString("yyyy-MM-dd") : "";
+            ViewBag.keyword = string.IsNullOrWhiteSpace(keyword) ? inputKeyword : keyword;
+
+            return View(model);*/
+            #endregion
+        }
+
+        //按督导维度统计督导上传照片
+        public ActionResult SuperviserPhotosStatistics(int pn = 1, string keyword = null, string area = null, DateTime? starttime = null, DateTime? endtime = null,
+                                                       string stafforder = null, string countlogorder = null)
+        {
+            var query = db.View_SuperviserPhotosStatistics.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(area))
+                query = query.Where(t => t.Area == area);
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+                query = query.Where(t => t.StaffName.Contains(keyword) ||
+                                    t.Mobile.Contains(keyword));
+            if (starttime.HasValue)
+                query = query.Where(t => t.UploadDate >= starttime);
+            if (endtime.HasValue)
+            {
+                endtime = Convert.ToDateTime(endtime).AddDays(1);
+                query = query.Where(t => t.UploadDate < endtime);
+            }
+            //默认近一个月
+            if (!starttime.HasValue && !endtime.HasValue)
+            {
+                var now = DateTime.Today.AddDays(1);
+                starttime = now.AddMonths(-1);
+                endtime = now;
+                query = query.Where(t => t.UploadDate >= starttime && t.UploadDate < endtime);
+            }
+
+            //groupby
+            var queryX = from q in query.AsEnumerable()
+                         group q by new { q.Area, q.StaffName, q.Mobile } into ultimate
+                         select new
+                         {
+                             Area = ultimate.Key.Area,
+                             StaffName = ultimate.Key.StaffName,
+                             Mobile = ultimate.Key.Mobile,
+                             CountLog = ultimate.Sum(q => q.CountLog)
+                         };
+
+            if (string.IsNullOrWhiteSpace(stafforder) && string.IsNullOrWhiteSpace(countlogorder))
+                queryX = queryX.OrderBy(t => t.StaffName);
+
+            var list = new List<View_SuperviserPhotosStatistics>();
+            foreach (var item in queryX.AsEnumerable())
+            {
+                var superviser = new View_SuperviserPhotosStatistics();
+                superviser.Area = item.Area;
+                superviser.StaffName = item.StaffName;
+                superviser.Mobile = item.Mobile;
+                superviser.CountLog = item.CountLog;
+                list.Add(superviser);
+            };
+
+            if (!string.IsNullOrWhiteSpace(stafforder))
+            {
+                if (stafforder == "desc")
+                    list = list.OrderByDescending(t => t.StaffName).ToList();
+                else
+                    list = list.OrderBy(t => t.StaffName).ToList();
+            }
+            if (!string.IsNullOrWhiteSpace(countlogorder))
+            {
+                if (countlogorder == "desc")
+                    list = list.OrderByDescending(t => t.CountLog).ToList();
+                else
+                    list = list.OrderBy(t => t.CountLog).ToList();
+            }
+
+
+            var model = list.AsEnumerable().ToPagedList(pn, 10);
+            ViewBag.starttime = starttime.HasValue ? starttime.Value.ToString("yyyy-MM-dd") : "";
+            ViewBag.endtime = endtime.HasValue ? endtime.Value.AddDays(-1).ToString("yyyy-MM-dd") : "";
+            ViewBag.keyword = string.IsNullOrWhiteSpace(keyword) ? inputKeyword : keyword;
+            ViewBag.area = string.IsNullOrWhiteSpace(area) ? "" : area;
+
+            return View(model);
+        }
+        /// <summary>
+        /// 督导上传照片详细
+        /// </summary>
+        /// <param name="pn">pagesize</param>
+        /// <param name="area">区域</param>
+        /// <param name="dm">店名</param>
+        /// <param name="dudaomz">督导名字</param>
+        /// <param name="mainproject">主项目</param>
+        /// <param name="childproject">子项目</param>
+        /// <param name="starttime"></param>
+        /// <param name="endtime"></param>
+        /// <returns></returns>
+        public ActionResult PhotosDetail(int pn = 1, string area = null, string dm = null, string dudaomz = null,
+                                         string mainproject = null, string childproject = null,
+                                         DateTime? starttime = null, DateTime? endtime = null)
+        {
+            var query = db.View_SuperviserUploadPhotos.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(dm))
+            {
+                query = query.Where(t => t.dianming.Contains(dm));
+            }
+            if (!string.IsNullOrWhiteSpace(dudaomz))
+            {
+                query = query.Where(t => t.StaffName.Contains(dudaomz));
+
+            }
+            if (!string.IsNullOrWhiteSpace(mainproject) && mainproject != "0")
+            {
+                query = query.Where(t => t.mainproject == mainproject);
+            }
+            if (!string.IsNullOrWhiteSpace(childproject) && childproject != "0")
+            {
+                query = query.Where(t => t.childproject == childproject);
+            }
+            if (starttime.HasValue)
+            {
+                query = query.Where(t => t.uploaddate >= starttime);
+            }
+            if (endtime.HasValue)
+            {
+                endtime = Convert.ToDateTime(endtime).AddDays(1);
+                query = query.Where(t => t.uploaddate < endtime);
+            }
+            //默认近一个月
+            if (!starttime.HasValue && !endtime.HasValue)
+            {
+                var now = DateTime.Today.AddDays(1);
+                starttime = now.AddMonths(-1);
+                endtime = now;
+                query = query.Where(t => t.uploaddate >= starttime &&
+                                       t.uploaddate < endtime);
+            }
+
+            var model = query.OrderBy(t => t.StaffName).OrderByDescending(t => t.uploaddate)
+                             .ToPagedList(pn, 10);
+
+            ViewBag.starttime = starttime.HasValue ? starttime.Value.ToString("yyyy-MM-dd") : "";
+            ViewBag.endtime = endtime.HasValue ? endtime.Value.AddDays(-1).ToString("yyyy-MM-dd") : "";
+            ViewBag.dm = string.IsNullOrWhiteSpace(dm) ? inputKeyword : dm;
+            ViewBag.dudaomz = string.IsNullOrWhiteSpace(dudaomz) ? inputKeyword : dudaomz;
+            ViewBag.area = string.IsNullOrWhiteSpace(area) ? "" : area;
+            ViewBag.mainproject = string.IsNullOrWhiteSpace(mainproject) ? "0" : mainproject;
+            ViewBag.childproject = string.IsNullOrWhiteSpace(childproject) ? "0" : childproject;
+
+            return View(model);
+        }
+
+        //批复督导上传照片 by Lee 20150721
+        public string tipifupictureupload(int id, string content)
+        {
+            var model = new PiFuOnPictureUpload { PictureUploadID = id, PiFuContent = content };
+            db.PiFuOnPictureUpload.Add(model);
+            db.SaveChangesAsync();
+            return "";
+        }
 
 
         #endregion

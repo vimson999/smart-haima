@@ -45,7 +45,7 @@
                         </a>
                         <span style="float:right">
                             @if (item.IsPublish == true) {
-                                <a style="cursor:pointer;" onclick="publishnotice(@item.id, 1)">取消发布</a>
+                                <span class="panel-info">已发布</span>
                             }
                             else { 
                                  @Html.ActionLink("修改", "editnotice", new { id = @item.id }, new { @class = "text-primary" })
@@ -75,7 +75,7 @@
     })
 
     function publishnotice(id,ispublish){
-        var tip = ispublish == 1?"确定发布？": "确定取消发布？";
+        var tip = ispublish == 1?"确定取消发布？": "确定发布？";
         if(confirm(tip))
         {
             var postdata = {id:id,ispublish:ispublish };

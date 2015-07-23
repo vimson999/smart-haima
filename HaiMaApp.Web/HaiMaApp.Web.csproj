@@ -199,6 +199,9 @@
     <Compile Include="PiFuOnChuChai.cs">
       <DependentUpon>HaiMa.tt</DependentUpon>
     </Compile>
+    <Compile Include="PiFuOnPictureUpload.cs">
+      <DependentUpon>HaiMa.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Province.cs">
       <DependentUpon>HaiMa.tt</DependentUpon>
@@ -224,13 +227,22 @@
     <Compile Include="TongZhi.cs">
       <DependentUpon>HaiMa.tt</DependentUpon>
     </Compile>
+    <Compile Include="View_AreaPhotosStatistics.cs">
+      <DependentUpon>HaiMa.tt</DependentUpon>
+    </Compile>
     <Compile Include="View_AreaStatisticsTripLog.cs">
+      <DependentUpon>HaiMa.tt</DependentUpon>
+    </Compile>
+    <Compile Include="View_SuperviserPhotosStatistics.cs">
       <DependentUpon>HaiMa.tt</DependentUpon>
     </Compile>
     <Compile Include="View_SuperviserStatisticsTripLog.cs">
       <DependentUpon>HaiMa.tt</DependentUpon>
     </Compile>
     <Compile Include="View_SuperviserTripLog.cs">
+      <DependentUpon>HaiMa.tt</DependentUpon>
+    </Compile>
+    <Compile Include="View_SuperviserUploadPhotos.cs">
       <DependentUpon>HaiMa.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -360,6 +372,9 @@
     <Content Include="Views\Home\AreaStatistics.cshtml" />
     <Content Include="Views\Home\SuperviserStatistics.cshtml" />
     <Content Include="Views\Home\TripLogDetail.cshtml" />
+    <Content Include="Views\Home\AreaPhotosStatistics.cshtml" />
+    <Content Include="Views\Home\SuperviserPhotosStatistics.cshtml" />
+    <Content Include="Views\Home\PhotosDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

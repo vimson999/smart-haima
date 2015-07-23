@@ -59,10 +59,9 @@
 		</div>
 
 		<div class="form-inline" style="margin:5px">
-			<label for="XiaoShouFuWuDian" style="width:100px">销售服务点：</label>
-			<input type="text" name="XiaoShouFuWuDian" value="@Model.XiaoShouFuWuDian" class="form-control" placeholder="">
-
-			<label for="ZhuanYingGongSiMingCheng" style="width:100px;margin-left:100px;">专营公司名称：</label>
+			<label for="XiaoShouFuWuDian" style="width:100px">4S店简称：</label>
+			<input type="text" name="XiaoShouFuWuDian" value="@Model.XiaoShouFuWuDian" class="form-control" placeholder=""><i class="mark-red">*</i>
+			<label for="ZhuanYingGongSiMingCheng" style="width:100px;margin-left:100px;">4S店全称：</label>
 			<input type="text" name="ZhuanYingGongSiMingCheng" value="@Model.ZhuanYingGongSiMingCheng" class="form-control" placeholder="">
 		</div>
 
@@ -136,7 +135,7 @@
         };
         $.ajax({
             type: "post",
-            url: "AddContact",
+            url: "EditContact",
             data: postdata,
             dataType: "json",
             success: function (data) {
@@ -157,6 +156,12 @@
         var shengfen = $("[name=ShengFen]").val();
         if (!shengfen) {
             alert("省份选择不能为空！");
+            isNull = true;
+            return isNull;
+        }
+        var xiaoShouFuWuDian = $("[name=XiaoShouFuWuDian]").val();
+        if (!xiaoShouFuWuDian) {
+            alert("4S店简称不能为空！");
             isNull = true;
             return isNull;
         }

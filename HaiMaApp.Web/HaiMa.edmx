@@ -76,6 +76,14 @@
           <Property Name="PiFuContent" Type="varchar(max)" />
           <Property Name="chuchaiID" Type="int" />
         </EntityType>
+        <EntityType Name="PiFuOnPictureUpload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PiFuContent" Type="varchar(max)" />
+          <Property Name="PictureUploadID" Type="int" />
+        </EntityType>
         <EntityType Name="Province">
           <Key>
             <PropertyRef Name="Id" />
@@ -99,7 +107,7 @@
           <Property Name="Modifier" Type="varchar" MaxLength="50" />
           <Property Name="Modifytime" Type="datetime" />
           <Property Name="LoginId" Type="varchar" MaxLength="50" />
-          <Property Name="LoginPassword" Type="nchar" MaxLength="10" />
+          <Property Name="LoginPassword" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="StaffPosition">
           <Key>
@@ -201,6 +209,17 @@ warning 6002: The table/view 'HaiMaApp.dbo.TakePictureUpload_dudao' does not hav
           <Property Name="DuDaoMingZi" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'HaiMaApp.dbo.View_AreaPhotosStatistics' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_AreaPhotosStatistics">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Area" Type="varchar" MaxLength="50" />
+          <Property Name="CountLog" Type="int" />
+          <Property Name="UploadDate" Type="datetime" />
+          <Property Name="ID" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'HaiMaApp.dbo.View_AreaStatisticsTripLog' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="View_AreaStatisticsTripLog">
           <Key>
@@ -209,6 +228,19 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_AreaStatisticsTripLog' does not 
           <Property Name="Area" Type="varchar" MaxLength="50" />
           <Property Name="CountLog" Type="int" />
           <Property Name="UploadDate" Type="date" />
+          <Property Name="ID" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserPhotosStatistics' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_SuperviserPhotosStatistics">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Area" Type="varchar" MaxLength="50" />
+          <Property Name="StaffName" Type="varchar" MaxLength="50" />
+          <Property Name="Mobile" Type="varchar" MaxLength="20" />
+          <Property Name="CountLog" Type="int" />
+          <Property Name="UploadDate" Type="datetime" />
           <Property Name="ID" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -244,6 +276,26 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
           <Property Name="StaffName" Type="varchar" MaxLength="50" />
           <Property Name="Mobile" Type="varchar" MaxLength="20" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserUploadPhotos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_SuperviserUploadPhotos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="dianming" Type="varchar" MaxLength="500" />
+          <Property Name="mainproject" Type="varchar" MaxLength="500" />
+          <Property Name="childproject" Type="varchar" MaxLength="500" />
+          <Property Name="riqi" Type="datetime" />
+          <Property Name="project" Type="varchar" MaxLength="500" />
+          <Property Name="position" Type="varchar" MaxLength="500" />
+          <Property Name="description" Type="varchar(max)" />
+          <Property Name="picname" Type="varchar" MaxLength="500" />
+          <Property Name="uploaddate" Type="datetime" />
+          <Property Name="UploaderPhone" Type="varchar" MaxLength="50" />
+          <Property Name="StaffName" Type="varchar" MaxLength="50" />
+          <Property Name="Mobile" Type="varchar" MaxLength="20" />
+        </EntityType>
         <EntityContainer Name="HaiMaAppModelStoreContainer">
           <EntitySet Name="Area" EntityType="Self.Area" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChuChaiImages" EntityType="Self.ChuChaiImages" Schema="dbo" store:Type="Tables" />
@@ -251,6 +303,7 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
           <EntitySet Name="DuDaoRights" EntityType="Self.DuDaoRights" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NewTongXunLu" EntityType="Self.NewTongXunLu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PiFuOnChuChai" EntityType="Self.PiFuOnChuChai" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PiFuOnPictureUpload" EntityType="Self.PiFuOnPictureUpload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Province" EntityType="Self.Province" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Staff" EntityType="Self.Staff" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StaffPosition" EntityType="Self.StaffPosition" Schema="dbo" store:Type="Tables" />
@@ -290,6 +343,14 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
     [TakePictureUpload_dudao].[DuDaoMingZi] AS [DuDaoMingZi]
     FROM [dbo].[TakePictureUpload_dudao] AS [TakePictureUpload_dudao]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="View_AreaPhotosStatistics" EntityType="Self.View_AreaPhotosStatistics" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_AreaPhotosStatistics].[Area] AS [Area], 
+    [View_AreaPhotosStatistics].[CountLog] AS [CountLog], 
+    [View_AreaPhotosStatistics].[UploadDate] AS [UploadDate], 
+    [View_AreaPhotosStatistics].[ID] AS [ID]
+    FROM [dbo].[View_AreaPhotosStatistics] AS [View_AreaPhotosStatistics]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="View_AreaStatisticsTripLog" EntityType="Self.View_AreaStatisticsTripLog" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [View_AreaStatisticsTripLog].[Area] AS [Area], 
@@ -297,6 +358,16 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
     [View_AreaStatisticsTripLog].[UploadDate] AS [UploadDate], 
     [View_AreaStatisticsTripLog].[ID] AS [ID]
     FROM [dbo].[View_AreaStatisticsTripLog] AS [View_AreaStatisticsTripLog]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="View_SuperviserPhotosStatistics" EntityType="Self.View_SuperviserPhotosStatistics" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_SuperviserPhotosStatistics].[Area] AS [Area], 
+    [View_SuperviserPhotosStatistics].[StaffName] AS [StaffName], 
+    [View_SuperviserPhotosStatistics].[Mobile] AS [Mobile], 
+    [View_SuperviserPhotosStatistics].[CountLog] AS [CountLog], 
+    [View_SuperviserPhotosStatistics].[UploadDate] AS [UploadDate], 
+    [View_SuperviserPhotosStatistics].[ID] AS [ID]
+    FROM [dbo].[View_SuperviserPhotosStatistics] AS [View_SuperviserPhotosStatistics]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_SuperviserStatisticsTripLog" EntityType="Self.View_SuperviserStatisticsTripLog" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -325,6 +396,23 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
     [View_SuperviserTripLog].[Mobile] AS [Mobile]
     FROM [dbo].[View_SuperviserTripLog] AS [View_SuperviserTripLog]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="View_SuperviserUploadPhotos" EntityType="Self.View_SuperviserUploadPhotos" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_SuperviserUploadPhotos].[id] AS [id], 
+    [View_SuperviserUploadPhotos].[dianming] AS [dianming], 
+    [View_SuperviserUploadPhotos].[mainproject] AS [mainproject], 
+    [View_SuperviserUploadPhotos].[childproject] AS [childproject], 
+    [View_SuperviserUploadPhotos].[riqi] AS [riqi], 
+    [View_SuperviserUploadPhotos].[project] AS [project], 
+    [View_SuperviserUploadPhotos].[position] AS [position], 
+    [View_SuperviserUploadPhotos].[description] AS [description], 
+    [View_SuperviserUploadPhotos].[picname] AS [picname], 
+    [View_SuperviserUploadPhotos].[uploaddate] AS [uploaddate], 
+    [View_SuperviserUploadPhotos].[UploaderPhone] AS [UploaderPhone], 
+    [View_SuperviserUploadPhotos].[StaffName] AS [StaffName], 
+    [View_SuperviserUploadPhotos].[Mobile] AS [Mobile]
+    FROM [dbo].[View_SuperviserUploadPhotos] AS [View_SuperviserUploadPhotos]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -349,6 +437,10 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
           <EntitySet Name="View_SuperviserStatisticsTripLog" EntityType="HaiMaAppModel.View_SuperviserStatisticsTripLog" />
           <EntitySet Name="Area" EntityType="HaiMaAppModel.Area" />
           <EntitySet Name="Province" EntityType="HaiMaAppModel.Province" />
+          <EntitySet Name="View_AreaPhotosStatistics" EntityType="HaiMaAppModel.View_AreaPhotosStatistics" />
+          <EntitySet Name="View_SuperviserPhotosStatistics" EntityType="HaiMaAppModel.View_SuperviserPhotosStatistics" />
+          <EntitySet Name="View_SuperviserUploadPhotos" EntityType="HaiMaAppModel.View_SuperviserUploadPhotos" />
+          <EntitySet Name="PiFuOnPictureUpload" EntityType="HaiMaAppModel.PiFuOnPictureUpload" />
         </EntityContainer>
         <EntityType Name="ChuChaiImages">
           <Key>
@@ -512,7 +604,7 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
           <Property Name="Modifier" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Modifytime" Type="DateTime" Precision="3" />
           <Property Name="LoginId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LoginPassword" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="LoginPassword" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="StaffPosition">
           <Key>
@@ -578,6 +670,52 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
           <Property Name="ProvinceCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ProvinceName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="View_AreaPhotosStatistics">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Area" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CountLog" Type="Int32" />
+          <Property Name="UploadDate" Type="DateTime" Precision="3" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="View_SuperviserPhotosStatistics">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Area" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StaffName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CountLog" Type="Int32" />
+          <Property Name="UploadDate" Type="DateTime" Precision="3" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="View_SuperviserUploadPhotos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="dianming" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="mainproject" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="childproject" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="riqi" Type="DateTime" Precision="3" />
+          <Property Name="project" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="position" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="picname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="uploaddate" Type="DateTime" Precision="3" />
+          <Property Name="UploaderPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StaffName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PiFuOnPictureUpload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PiFuContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PictureUploadID" Type="Int32" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -828,6 +966,56 @@ warning 6002: The table/view 'HaiMaApp.dbo.View_SuperviserTripLog' does not have
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="ProvinceName" ColumnName="ProvinceName" />
                 <ScalarProperty Name="ProvinceCode" ColumnName="ProvinceCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_AreaPhotosStatistics">
+            <EntityTypeMapping TypeName="HaiMaAppModel.View_AreaPhotosStatistics">
+              <MappingFragment StoreEntitySet="View_AreaPhotosStatistics">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
+                <ScalarProperty Name="CountLog" ColumnName="CountLog" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_SuperviserPhotosStatistics">
+            <EntityTypeMapping TypeName="HaiMaAppModel.View_SuperviserPhotosStatistics">
+              <MappingFragment StoreEntitySet="View_SuperviserPhotosStatistics">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
+                <ScalarProperty Name="CountLog" ColumnName="CountLog" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="StaffName" ColumnName="StaffName" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_SuperviserUploadPhotos">
+            <EntityTypeMapping TypeName="HaiMaAppModel.View_SuperviserUploadPhotos">
+              <MappingFragment StoreEntitySet="View_SuperviserUploadPhotos">
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="StaffName" ColumnName="StaffName" />
+                <ScalarProperty Name="UploaderPhone" ColumnName="UploaderPhone" />
+                <ScalarProperty Name="uploaddate" ColumnName="uploaddate" />
+                <ScalarProperty Name="picname" ColumnName="picname" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="project" ColumnName="project" />
+                <ScalarProperty Name="riqi" ColumnName="riqi" />
+                <ScalarProperty Name="childproject" ColumnName="childproject" />
+                <ScalarProperty Name="mainproject" ColumnName="mainproject" />
+                <ScalarProperty Name="dianming" ColumnName="dianming" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PiFuOnPictureUpload">
+            <EntityTypeMapping TypeName="HaiMaAppModel.PiFuOnPictureUpload">
+              <MappingFragment StoreEntitySet="PiFuOnPictureUpload">
+                <ScalarProperty Name="PictureUploadID" ColumnName="PictureUploadID" />
+                <ScalarProperty Name="PiFuContent" ColumnName="PiFuContent" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

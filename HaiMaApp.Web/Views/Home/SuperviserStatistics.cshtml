@@ -24,8 +24,10 @@
                 <span class="input-group-addon" id="sizing-addon6">结束时间:</span>
                 <input type="text" name="endtime" id="endtime" class="form-control" aria-describedby="sizing-addon6" value="@ViewBag.endtime" />
             </div>
+            <input type="hidden" name="area" id="area" value="@ViewBag.area" />
             <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
-            <input type="button" class="form-control goback" style="margin:0px 5px; " value="转到区域维度统计页" />
+            &nbsp;@Html.ActionLink("转到区域维度统计页", "AreaStatistics", new { starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
+
         </div>
         }
         <table class="table table-striped table-hover">
@@ -41,7 +43,7 @@
                 @foreach (var item in Model)
                 {
                 <tr>
-                    <td scope="row">@Html.ActionLink(@item.StaffName==null ?"其他": @item.StaffName, "triplogdetail", new { dudaomz = @item.StaffName })</td>
+                    <td scope="row">@Html.ActionLink(@item.StaffName == null ? "其他" : @item.StaffName, "triplogdetail", new {area=@ViewBag.area,  dudaomz = @item.StaffName, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime })</td>
                     <td>@item.Mobile</td>
                     <td>@item.CountLog</td>
                 </tr>
@@ -66,15 +68,18 @@
         function loadordersetting() {
             var stafforder = lee.common.getquerystring("stafforder");
             var countlogorder = lee.common.getquerystring("countlogorder");
+            var area = lee.common.getquerystring("area");
+            var starttime = $("#starttime").val();
+            var endtime = $("#endtime").val();
 
             $("th a").each(function () {
                 var obj = $(this);
                 var objId = obj.attr("id");
                 if (objId == "staff") {
-                    ordersetting(obj, "/home/superviserstatistics?stafforder=", stafforder, "督导");
+                    ordersetting(obj, "/home/superviserstatistics?area="+area + "&starttime="+starttime+"&endtime="+endtime+"&stafforder=", stafforder, "督导");
                 }
                 else if (objId == "countlog") {
-                    ordersetting(obj, "/home/superviserstatistics?countlogorder=", countlogorder, "出差日志");
+                    ordersetting(obj, "/home/superviserstatistics?area=" + area + "&starttime=" + starttime + "&endtime=" + endtime + "&countlogorder=", countlogorder, "出差日志");
                 }
             });
         }
