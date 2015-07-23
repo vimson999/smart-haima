@@ -108,7 +108,8 @@ namespace HaiMaApp.Web.Hanlder
             var mobile = QueryString.GetQuery(context, "mobile");
             var password = QueryString.GetQuery(context, "password");
 
-            var result = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, string.Format("select COUNT(*) as totalcount from DuDaoRights where mobile='{0}' and Password='{1}' and HasRights=1", mobile, password));
+            var result = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, 
+                string.Format("select COUNT(*) as totalcount from DuDaoRights where mobile='{0}' and Password='{1}' and HasRights=1", mobile, password));
             string returnMsg = "";
             if (Int32.Parse(result.ToString()) > 0)
             {
@@ -1026,12 +1027,15 @@ namespace HaiMaApp.Web.Hanlder
         private void updatePassword(HttpContext context)
         {
             var username = QueryString.GetQuery(context, "username");
-            var oldpass = QueryString.GetQuery(context, "oldpass");
+            //var oldpass = QueryString.GetQuery(context, "oldpass");
             var newpass = QueryString.GetQuery(context, "newpass");
 
-            string returnMsg = "用户名或者原密码不正确";
+            //string returnMsg = "用户名或者原密码不正确";
+            //var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
+            //        @"select top 100 * from DuDaoRights where mobile = '" + username + "' and password = '" + oldpass + "' order by ID desc");
+            string returnMsg = "用户名不正确";
             var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
-                    @"select top 100 * from DuDaoRights where mobile = '" + username + "' and password = '" + oldpass + "' order by ID desc");
+                @"select top 100 * from DuDaoRights where mobile = '" + username + "' order by ID desc");
             if (datasource != null && datasource.Tables[0].Rows.Count > 0)
             {
                 var ret = SqlHelper.ExecuteNonQuery(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
