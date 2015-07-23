@@ -69,11 +69,11 @@
             <nav class="blog-nav" id="navdaohang">
                 <a class="blog-nav-item @ViewBag.notice" id="notcie" href="~/home/notice"><strong>通知</strong></a>
                 <a class="blog-nav-item @ViewBag.contact" id="contact" href="~/home/contact"><strong>经销商通讯录</strong></a>
-                <a class="blog-nav-item @ViewBag.dudaoPictureUpload" id="dudaoPictureUpload" href="~/home/dudaoPictureUpload"><strong>督导拍照上传</strong></a>
-                <a class="blog-nav-item @ViewBag.dudaolog" id="dudaolog" href="~/home/dudaolog"><strong>督导出差日志</strong></a>
+                @*<a class="blog-nav-item @ViewBag.dudaoPictureUpload" id="dudaoPictureUpload" href="~/home/dudaoPictureUpload"><strong>督导拍照上传</strong></a>
+                <a class="blog-nav-item @ViewBag.dudaolog" id="dudaolog" href="~/home/dudaolog"><strong>督导出差日志</strong></a>*@
                 <a class="blog-nav-item @ViewBag.StaffManage" id="staffmanage" href="~/home/StaffManage"><strong>员工管理</strong></a>
-                <a class="blog-nav-item @ViewBag.AreaStatistics" id="areastatistics" href="~/home/AreaStatistics"><strong>督导出差日志New</strong></a>
-                <a class="blog-nav-item @ViewBag.AreaPhotosStatistics" id="areaphotosstatistics" href="~/home/areaphotosstatistics"><strong>督导拍照上传New</strong></a>
+                <a class="blog-nav-item @ViewBag.AreaPhotosStatistics" id="areaphotosstatistics" href="~/home/areaphotosstatistics"><strong>督导拍照上传</strong></a>
+                <a class="blog-nav-item @ViewBag.AreaStatistics" id="areastatistics" href="~/home/AreaStatistics"><strong>督导出差日志</strong></a>
                 @{
                     string curentUser = X3.UtilX3.GetCookie("hmToken");
                     string loginuser = curentUser.ToLower();
