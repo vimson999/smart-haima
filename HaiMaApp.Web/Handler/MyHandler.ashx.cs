@@ -1209,13 +1209,8 @@ namespace HaiMaApp.Web.Hanlder
             postJson.type = "broadcast";
             postJson.payload = new Payload();
             postJson.payload.display_type = "notification";
-            postJson.payload.body = new ContentBody();
-            postJson.payload.body.ticker = "ticker";
-            postJson.payload.body.title = "apple 侬好哇";
-            postJson.payload.body.text = "apple text。。侬好哇。。侬好哇。";
-            postJson.payload.body.after_open = "go_custom";
-            postJson.payload.body.custom = "comment-notify";
 
+            postJson.payload.aps = new Aps();
             postJson.payload.aps.badge = 0;
             postJson.payload.aps.alert = "apple text。。侬好哇。。侬好哇。";
             postJson.payload.aps.sound = "chime";

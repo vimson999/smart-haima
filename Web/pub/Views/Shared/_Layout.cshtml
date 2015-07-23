@@ -8,18 +8,36 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/modernizr")   
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrap")    
+
 	<style type="text/css">
 		.nav>li>a {
 			color: white;
 		}
+        /*navigator css height*/
+        .blog-masthead .navbar-fixed-top .container {
+            line-height: 60px;
+            height:60px;
+            font-size: 16px;
+            font-family: 'Microsoft YaHei',sans-serif;
+            margin-bottom: 30px;
+        }
+        .blog-nav {
+            padding:10px 0px;
+        }
+        .blog-nav .active::after {
+            bottom:-10px;
+        }
+        .navbar-header {
+            margin: 5px;
+        }
 	</style>
 </head>
 <body>   
     <div class="blog-masthead navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <img src="../../assets/haima_logo.png" style="height: 35px;margin-top:2px;" />
+                <img src="../../assets/haima_logo.png" style="height: 39px; width:72px ;margin:5px 0px;" />
             </div>
             <nav class="blog-nav" id="navdaohang">
                 <a class="blog-nav-item @ViewBag.notice" id="notcie" href="~/home/notice"><strong>通知</strong></a>
@@ -28,21 +46,30 @@
                 <a class="blog-nav-item @ViewBag.dudaolog" id="dudaolog" href="~/home/dudaolog"><strong>督导出差日志</strong></a>
                 <a class="blog-nav-item @ViewBag.StaffManage" id="staffmanage" href="~/home/StaffManage"><strong>员工管理</strong></a>
                 <a class="blog-nav-item @ViewBag.AreaStatistics" id="areastatistics" href="~/home/AreaStatistics"><strong>督导出差日志New</strong></a>
+                <a class="blog-nav-item @ViewBag.AreaPhotosStatistics" id="areaphotosstatistics" href="~/home/areaphotosstatistics"><strong>督导拍照上传New</strong></a>
                 @{
                     string curentUser = X3.UtilX3.GetCookie("hmToken");
-                    string dudaomingzi = curentUser.ToLower();
+                    string loginuser = curentUser.ToLower();
                     if (curentUser.ToLower() != "admin")
                     {
                         HaiMaApp db = new HaiMaApp();
-                        dudaomingzi = db.DuDaoRights.Where(d => d.mobile == curentUser).FirstOrDefault().DuDaoMingZi;
+                        var result = db.SuperAdmin.Where(d => d.username == curentUser && d.Status == true).FirstOrDefault();
+                        if (result != null)
+                        {
+                            loginuser = result.memo;
+                        }
+                        else
+                        {
+                            X3.UtilX3.RemoveCookie("hmToken"); 
+                        }
                     }                    
                 }                
                 <a class="blog-nav-item navbar-right"  href="~/account/logout">退出</a>
-                <a class="glyphicon glyphicon-user blog-nav-item navbar-right"> @dudaomingzi</a>
+                <a class="glyphicon glyphicon-user blog-nav-item navbar-right"> @loginuser</a>
             </nav>
 </div>
     </div>
-    <div class="container body-content">
+    <div class="container body-content" style="margin-top:20px;">
         <div ></div>
         @RenderBody()
         <hr />
@@ -51,6 +78,18 @@
         </footer>
     </div>
         @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        //add by Lee 20150720 disabled
+        $(function () {
+
+            $("#badoopager a").each(function () {
+                if ($(this).attr("disabled") == "disabled")
+                    $(this).css("color", "#888").css("border", "2px #f0f0f0 solid ").css("a:hover", "2px #f0f0f0 solid");
+            });
+        })
+
+    </script>
     
 </body>
 

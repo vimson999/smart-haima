@@ -38,17 +38,131 @@
                         <td>@item.Position</td>
                         <th>@item.StaffName</th>
                         <td>@item.Mobile</td>
-                        <td>@Html.ActionLink("修改", "editstaff", new { Id = @item.Id }) <a style="cursor:pointer;" onclick="deleteStaff(@item.Id)">删除</a></td>
+                        <td>@Html.ActionLink("修改", "editstaff", new { Id = @item.Id }) <a style="cursor:pointer;" onclick="deleteStaff(@item.Id)">删除</a>&nbsp;<a data-toggle="modal" data-target="#modifypassword" data-whatever="@item.Mobile" style="cursor:pointer;">修改登录密码</a></td>
                     </tr>
                 }
             </tbody>
         </table>
+        @{string loginuser = X3.UtilX3.GetCookie("hmToken");}
+        <input type="hidden" id="loginuser" value="@loginuser" />
         <div>
             <div style="float:left;padding:10px 0">共 @Model.TotalPageCount 页 @Model.TotalItemCount 条</div>
             @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "pn", ShowPageIndexBox = true, CurrentPagerItemWrapperFormatString = "<span class=\"current\">{0}</span>" }, new { id = "badoopager" })<span class=\"current\"></span><span class=\"current\"></span><span class=\"current\"></span>
         </div>
     </div>
+
+    <div class="modal fade" id="modifypassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">修改员工登录密码</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline form-group">
+                        <label for="message-text" class="control-label" style="width:100px">用户名：</label>
+                        <input id="mobile" type="text" class="form-control" disabled="disabled">
+                    </div>
+                    <div class="form-inline form-group">
+                        <label for="message-text" class="control-label" style="width:100px;">新密码:</label>
+                        <input id="password" type="password" class="form-control" />
+                    </div>
+                    <div class="form-inline form-group">
+                        <label for="message-text" class="control-label" style="width:100px;">确认密码:</label>
+                        <input id="confirmpassword" type="password" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="modifypassword()" id="save">确定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="btn_dialogclose">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+
+        $('#modifypassword').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var mobile = button.data('whatever') // Extract info from data-* attributes
+            var modal = $(this)
+            $("#mobile").val(mobile); //用户名
+        })
+
+        function modifypassword() {
+            if (validateNull()) {
+                return;
+            }
+            savedata();
+
+        }
+
+        function savedata() {   
+            var postdata = { 
+                mobile : $("#mobile").val(),
+                password : $("#password").val()
+            };
+            $.ajax({
+                type: "post",
+                url: "ModifyPassword",
+                data: postdata,
+                dataType: "json",
+                success: function (data) {
+                    if (data == "1") {   
+                        var loginuser = $("#loginuser").val();
+                        var mobile = $("#mobile").val();
+                        alert(loginuser);
+                        alert(mobile);
+                        if (loginuser == mobile) {
+                            alert("密码已修改，请使用新密码登录系统！");
+                            location.href = "/account/login";
+                        }
+                        else {
+                            location.href = "/home/StaffManage";
+                        }
+                    }
+                    else {
+                        location.href = "/home/StaffManage";
+                    }
+                }
+            });
+        }
+
+        function validateNull() {
+            var isNull = false;
+            var password = $("#password").val();
+            var confirmpassword = $("#confirmpassword").val();
+
+            if (!password) {
+                alert("新密码不能为空！");
+                isNull = true;
+                return isNull;
+            }
+            if (password && password.length < 6) {
+                alert("新密码不能少于6位！");
+                isNull = true;
+                return isNull;
+            }
+            if (!confirmpassword) {
+                alert("确认密码不能为空！");
+                isNull = true;
+                return isNull;
+            }
+            if (confirmpassword && confirmpassword.length < 6) {
+                alert("确认密码不能少于6位！");
+                isNull = true;
+                return isNull;
+            }
+
+            if (password != confirmpassword) {
+                alert("两次密码输入不一致！");
+                isNull = true;
+                return isNull;
+            }
+            return isNull;
+        }
+
+
         function deleteStaff(cid) {
             if(confirm("确定删除？"))
             {
