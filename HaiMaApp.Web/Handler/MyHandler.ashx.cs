@@ -1215,11 +1215,12 @@ namespace HaiMaApp.Web.Hanlder
             postJson.payload.body.text = "apple text。。侬好哇。。侬好哇。";
             postJson.payload.body.after_open = "go_custom";
             postJson.payload.body.custom = "comment-notify";
-            
-            //postJson.payload.body.
 
+            postJson.payload.aps.badge = 0;
+            postJson.payload.aps.alert = "apple text。。侬好哇。。侬好哇。";
+            postJson.payload.aps.sound = "chime";
 
-
+            postJson.production_mode = "true";
             postJson.description = "description-UID:" + 123;
 
             postJson.thirdparty_id = "COMMENT";
