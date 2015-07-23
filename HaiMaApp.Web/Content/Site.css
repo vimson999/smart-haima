@@ -60,6 +60,8 @@ div#badoopager input[type=button]:hover {border: #48b9ef 2px solid; }
   font-weight: 500;
   /*color: #f0f0f0;*/
   color:#666;
+  width:111px;
+  text-align:center;
 }
 .blog-nav-item:hover,
 .blog-nav-item:focus {
