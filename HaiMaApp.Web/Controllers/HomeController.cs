@@ -251,7 +251,8 @@ namespace HaiMaApp.Web.Controllers
             {
                 try
                 {
-                    testTui(title, content);
+                    testAndroidTui(title, content);
+                    testIOSTui(title, content);
                 }
                 catch (Exception ex)
                 {
@@ -285,7 +286,8 @@ namespace HaiMaApp.Web.Controllers
             {
                 try
                 {
-                    testTui(title, content);
+                    testAndroidTui(title, content);
+                    testIOSTui(title, content);
                 }
                 catch (Exception ex)
                 {
@@ -315,7 +317,8 @@ namespace HaiMaApp.Web.Controllers
                 {
                     try
                     {
-                        testTui(tongzhi.title, tongzhi.content);
+                        testAndroidTui(tongzhi.title, tongzhi.content);
+                        testIOSTui(tongzhi.title, tongzhi.content);
                     }
                     catch (Exception ex)
                     {
@@ -334,8 +337,9 @@ namespace HaiMaApp.Web.Controllers
             return Json("1");
         }
 
+        #region testTui
         //copy from myhandler 
-        private void testTui(string title, string text)
+        private void testAndroidTui(string title, string text)
         {
             //push andriod
             UMengMessagePush umPush = new UMengMessagePush("559f209e67e58e9460006075", "exh3fjeoumuk4tbqngbsnxown8uqyhdz");
@@ -358,32 +362,43 @@ namespace HaiMaApp.Web.Controllers
 
             ReturnJsonClass resu = umPush.SendMessage(postJson);
 
-            //push ios
-            umPush = new UMengMessagePush("55a239b067e58e1a080075b7", "exh3fjeoumuk4tbqngbsnxown8uqyhdz");
-            postJson = new PostUMengJson();
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            var str = serializer.Serialize(resu);
+
+            LogX3.Info(DateTime.Now + "-testAndroidTui" + str);
+        }
+
+        private void testIOSTui(string title, string text)
+        {
+            //////// apple
+            var umPush = new UMengMessagePush("55a239b067e58e1a080075b7", "nqj7zbo88lfifcagcvs5adewnvkxqioi");
+            var postJson = new PostUMengJson();
 
             //Atw_PkXzlbY0FkeJsx773xEcFol1Hp4ue3Fp0-7Fzg-p
 
             postJson.type = "broadcast";
             postJson.payload = new Payload();
             postJson.payload.display_type = "notification";
-            postJson.payload.body = new ContentBody();
-            postJson.payload.body.ticker = "ticker";
-            postJson.payload.body.title = title;//"侬好哇";
-            postJson.payload.body.text = text;//"text。。侬好哇。。侬好哇。";
-            postJson.payload.body.after_open = "go_custom";
-            postJson.payload.body.custom = "comment-notify";
 
+            postJson.payload.aps = new Aps();
+            postJson.payload.aps.badge = 0;
+            postJson.payload.aps.alert = text;
+            postJson.payload.aps.sound = "chime";
+
+            postJson.production_mode = "true";
             postJson.description = "description-UID:" + 123;
+
             postJson.thirdparty_id = "COMMENT";
 
-            resu = umPush.SendMessage(postJson);
+            var resu = umPush.SendMessage(postJson);
 
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            var serializer = new JavaScriptSerializer();
             var str = serializer.Serialize(resu);
 
-            LogX3.Info(DateTime.Now + "-testTui" + str);
+            LogX3.Info(DateTime.Now + "-testIOSTui" + str);
         }
+
+        #endregion
 
         #endregion
 
@@ -1023,7 +1038,7 @@ namespace HaiMaApp.Web.Controllers
                              Mobile = ultimate.Key.Mobile,
                              CountLog = ultimate.Sum(q => q.CountLog)
                          };
-            
+
             if (string.IsNullOrWhiteSpace(stafforder) && string.IsNullOrWhiteSpace(countlogorder))
                 queryX = queryX.OrderBy(t => t.StaffName);
 
