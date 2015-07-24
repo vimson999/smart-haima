@@ -337,7 +337,7 @@ namespace HaiMaApp.Web.Controllers
             return Json("1");
         }
 
-        #region testTui
+        #region testTui  只推title
         //copy from myhandler 
         private void testAndroidTui(string title, string text)
         {
@@ -353,7 +353,7 @@ namespace HaiMaApp.Web.Controllers
             postJson.payload.body = new ContentBody();
             postJson.payload.body.ticker = "ticker";
             postJson.payload.body.title = title;//"侬好哇";
-            postJson.payload.body.text = text;//"text。。侬好哇。。侬好哇。";
+            postJson.payload.body.text = "";    //text;  //"text。。侬好哇。。侬好哇。";
             postJson.payload.body.after_open = "go_custom";
             postJson.payload.body.custom = "comment-notify";
 
@@ -368,7 +368,7 @@ namespace HaiMaApp.Web.Controllers
             LogX3.Info(DateTime.Now + "-testAndroidTui" + str);
         }
 
-        private void testIOSTui(string title, string text)
+        private void testIOSTui(string title,string text)
         {
             //////// apple
             var umPush = new UMengMessagePush("55a239b067e58e1a080075b7", "nqj7zbo88lfifcagcvs5adewnvkxqioi");
@@ -382,7 +382,7 @@ namespace HaiMaApp.Web.Controllers
 
             postJson.payload.aps = new Aps();
             postJson.payload.aps.badge = 0;
-            postJson.payload.aps.alert = text;
+            postJson.payload.aps.alert = title; 
             postJson.payload.aps.sound = "chime";
 
             postJson.production_mode = "true";
