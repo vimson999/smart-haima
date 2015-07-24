@@ -141,8 +141,9 @@ namespace HaiMaApp.Web.Hanlder
             var mobile = QueryString.GetQuery(context, "mobile");
             var password = QueryString.GetQuery(context, "password");
 
-            var result = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, 
-                string.Format("select COUNT(*) as totalcount from DuDaoRights where mobile='{0}' and Password='{1}' and HasRights=1", mobile, password));
+            //"select COUNT(1) as totalcount from DuDaoRights where mobile='{0}' and Password='{1}' and HasRights=1"
+            var commandText = string.Format(@"select COUNT(1) as totalcount from Staff where LoginId='{0}' and LoginPassword = '{1}'", mobile, password);
+            var result = SqlHelper.ExecuteScalar(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text, commandText );
             string returnMsg = "";
             if (Int32.Parse(result.ToString()) > 0)
             {
