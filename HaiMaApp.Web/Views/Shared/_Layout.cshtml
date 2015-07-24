@@ -92,7 +92,7 @@
                     }                    
                 }                
                 <a class="blog-nav-item navbar-right"  href="~/account/logout">退出</a>
-                <a class="glyphicon glyphicon-user blog-nav-item navbar-right"> @loginuser</a>
+                <a class="glyphicon glyphicon-user blog-nav-item navbar-right" style="color:#666; "> @loginuser</a>
             </nav>
 </div>
     </div>
@@ -107,13 +107,22 @@
         @RenderSection("scripts", required: false)
 
     <script type="text/javascript">
-        //add by Lee 20150720 disabled
         $(function () {
 
+            //page disabled add by Lee 20150720 
             $("#badoopager a").each(function () {
                 if ($(this).attr("disabled") == "disabled")
                     $(this).css("color", "#888").css("border", "2px #f0f0f0 solid ").css("a:hover", "2px #f0f0f0 solid");
             });
+
+            //menu active add by Lee 20150724            
+            var requestUrl = window.location.href.toLowerCase();
+            if (requestUrl.indexOf("photosdetail") > -1 || requestUrl.indexOf("superviserphotosstatistics") > -1) {
+                $("#areaphotosstatistics").addClass("active");
+            }
+            else if (requestUrl.indexOf("triplogdetail") > -1 || requestUrl.indexOf("superviserstatistics") > -1) {
+                $("#areastatistics").addClass("active");
+            }
         })
 
     </script>

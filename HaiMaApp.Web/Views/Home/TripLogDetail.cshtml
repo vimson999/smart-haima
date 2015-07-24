@@ -44,7 +44,7 @@
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse@{@item.id}" aria-expanded="@firstData.ToString().ToLower()" aria-controls="collapse@{@item.id}">
                                 <strong>
                                     @item.dianming
-                                </strong>（@item.StaffName @item.riqi.ToDateString()）
+                                </strong>（@item.StaffName @item.riqi）
                                 @{firstData = false;}
                             </a>
                             <span style="float:right;">
@@ -74,6 +74,10 @@
                             <div class="row">
                                 @{
                                   var listtp = db.ChuChaiImages.Where(p => p.chuchai_id == item.id).OrderByDescending(p => p.id);
+                                  if (listtp == null || listtp.Count() == 0)
+                                  {
+                                      return;
+                                  }
                                 foreach (var p in listtp)
                                 {
                                     <div class="col-md-1">
@@ -102,8 +106,6 @@
                                                             <!-- Carousel items -->
                                                             <div class="carousel-inner">
                                                                 @{
-                                    if (listtp != null && listtp.Count() > 0)
-                                    {
                                         foreach (var x in listtp)
                                         {
                                             if (@p.id == x.id)
@@ -115,7 +117,6 @@
                                                     <div class="item"><img style="max-width:570px;" src="../../ChuChaiRiZhi/@x.pic_name"></div>
                                             }
                                         }
-                                    }
                                                                 }
                                                             </div>
                                                             <!-- Carousel nav -->
