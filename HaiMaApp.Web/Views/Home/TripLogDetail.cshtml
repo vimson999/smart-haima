@@ -9,7 +9,7 @@
         HaiMaApp db = new HaiMaApp();
     }
     <link href="~/Content/themes/base/all.css" rel="stylesheet" />
-    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>   
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
     <div class="row">
         @using (Html.BeginForm("triplogdetail", "home", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
         {
@@ -28,7 +28,7 @@
                 </div>
                 <input type="hidden" name="dudaomz" id="dudaomz" value="@ViewBag.dudaomz" />
                 <input type="submit" class="form-control" style="margin:0px 5px; " value="搜索" />
-                @Html.ActionLink("导出excel", "dudaologToExcel", new { area = @ViewBag.area, dm = ( @ViewBag.dm=="请输入关键字"?"":@ViewBag.dm), dudaomz = @ViewBag.dudaomz, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
+                @Html.ActionLink("导出excel", "dudaologToExcel", new { area = @ViewBag.area, dm = (@ViewBag.dm == "请输入关键字" ? "" : @ViewBag.dm), dudaomz = @ViewBag.dudaomz, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
                 &nbsp;@Html.ActionLink("转到督导维度统计页", "SuperviserStatistics", new { area = @ViewBag.area, starttime = @ViewBag.starttime, endtime = @ViewBag.endtime }, new { @class = "btn btn-default", @role = "button" })
             </div>
             <div class="form-inline">
@@ -73,81 +73,78 @@
                             </div>
                             <div class="row">
                                 @{
-                                  var listtp = db.ChuChaiImages.Where(p => p.chuchai_id == item.id).OrderByDescending(p => p.id);
-                                  if (listtp == null || listtp.Count() == 0)
-                                  {
-                                      return;
-                                  }
-                                foreach (var p in listtp)
-                                {
-                                    <div class="col-md-1">
-                                        <a tabindex="0" role="button" data-toggle="modal" data-target="#myModal@{@p.id}"><img title="点击看大图" src="../../ChuChaiRiZhi/@p.pic_name" style="width:80px;height:60px;" /></a>
-                                        @*<div class="modal fade" id="myModal@{@p.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header" style="border:0px;">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <img style="max-width:570px;" src="../../ChuChaiRiZhi/@p.pic_name">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>*@
-
-                                        <div class="modal fade" id="myModal@{@p.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header" style="border:0px;">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div id="myCarousel@{@p.id}" class="carousel slide">
-                                                            <!-- Carousel items -->
-                                                            <div class="carousel-inner">
-                                                                @{
-                                        foreach (var x in listtp)
+                                    var listtp = db.ChuChaiImages.Where(p => p.chuchai_id == item.id).OrderByDescending(p => p.id);
+                                    if (listtp != null && listtp.Count() > 0)
+                                    {
+                                        foreach (var p in listtp)
                                         {
-                                            if (@p.id == x.id)
-                                            {
-                                                    <div class="item active"><img style="max-width:570px;" src="../../ChuChaiRiZhi/@x.pic_name"></div>
-                                            }
-                                            else
-                                            {
-                                                    <div class="item"><img style="max-width:570px;" src="../../ChuChaiRiZhi/@x.pic_name"></div>
-                                            }
-                                        }
-                                                                }
+                                            <div class="col-md-1">
+                                                <a tabindex="0" role="button" data-toggle="modal" data-target="#myModal@{@p.id}"><img title="点击看大图" src="../../ChuChaiRiZhi/@p.pic_name" style="width:80px;height:60px;" /></a>
+                                                @*<div class="modal fade" id="myModal@{@p.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header" style="border:0px;">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <img style="max-width:570px;" src="../../ChuChaiRiZhi/@p.pic_name">
+                                                                </div>
                                                             </div>
-                                                            <!-- Carousel nav -->
-                                                            <a class="carousel-control left" href="#myCarousel@{@p.id}" data-slide="prev">&lsaquo;</a>
-                                                            <a class="carousel-control right" href="#myCarousel@{@p.id}" data-slide="next">&rsaquo;</a>
                                                         </div>
+                                                    </div>*@
+                                                <div class="modal fade" id="myModal@{@p.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="border:0px;">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div id="myCarousel@{@p.id}" class="carousel slide">
+                                                                    <!-- Carousel items -->
+                                                                    <div class="carousel-inner">
+                                                                        @{
+                                            foreach (var x in listtp)
+                                            {
+                                                if (@p.id == x.id)
+                                                {
+                                                    <div class="item active"><img style="max-width:570px;" src="../../ChuChaiRiZhi/@x.pic_name"></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="item"><img style="max-width:570px;" src="../../ChuChaiRiZhi/@x.pic_name"></div>
+                                                }
+                                            }
+                                                                        }
+                                                                    </div>
+                                                                    <!-- Carousel nav -->
+                                                                    <a class="carousel-control left" href="#myCarousel@{@p.id}" data-slide="prev">&lsaquo;</a>
+                                                                    <a class="carousel-control right" href="#myCarousel@{@p.id}" data-slide="next">&rsaquo;</a>
+                                                                </div>
 
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                    </div>
+                                        }
+                                    }
                                 }
-                                }
-                                </div>
-                             <div>
-                            <h4>管理员批复：</h4>
-                            <ul id="pifu@{@item.id}">
-                                @{
+                            </div>
+                            <div>
+                                <h4>管理员批复：</h4>
+                                <ul id="pifu@{@item.id}">
+                                    @{
                                 var listpifu = db.PiFuOnChuChai.Where(p => p.chuchaiID == item.id).OrderByDescending(p => p.id);
                                 foreach (var p in listpifu)
                                 {
                                     <li class="list-group-item list-group-item-danger">@p.PiFuContent</li>
                                 }
-                                                }
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                                    }
+                                </ul>
                             </div>
+                        </div>
+                    </div>
+                </div>
                                 csp = "";
             }
         </div>
@@ -178,7 +175,6 @@
             </div>
         </div>
     </div>
-    @section Scripts{@{Html.RegisterMvcPagerScriptResource();}}
     <script>
         $(function () {
             $('[data-toggle="popover"]').popover();
@@ -192,7 +188,7 @@
             $("#message-text").val('');     //clear value
         })
         function tjpifu() {
-            $("#save").attr("disabled","disabled");
+            $("#save").attr("disabled", "disabled");
             var postdata = { id: $("#pifuid").val(), content: $("#message-text").val() };
             $.ajax({
                 type: "post",
@@ -221,3 +217,5 @@
         //    }
         //}
     </script>
+
+    @section Scripts{@{Html.RegisterMvcPagerScriptResource();}}

@@ -87,23 +87,25 @@
                             <span>@item.description</span>
                         </div>
                         <div class="row">
-                            @{if (item.picname == null || item.picname == "")
-                              { return; }
-                                <div class="col-md-1">
-                                    <a tabindex="0" role="button" data-toggle="modal" data-target="#myModal@{@item.id}"><img title="点击看大图" src="../../UploadImages/@item.picname" style="width:80px;height:60px;" /></a>
-                                    <div class="modal fade" id="myModal@{@item.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="border:0px;">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <img style="max-width:570px;" src="../../UploadImages/@item.picname">
+                            @{
+                                  if (item.picname != null && item.picname != "")
+                                  {  
+                                    <div class="col-md-1">
+                                        <a tabindex="0" role="button" data-toggle="modal" data-target="#myModal@{@item.id}"><img title="点击看大图" src="../../UploadImages/@item.picname" style="width:80px;height:60px;" /></a>
+                                        <div class="modal fade" id="myModal@{@item.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="border:0px;">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <img style="max-width:570px;" src="../../UploadImages/@item.picname">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>                                
+                                    </div> 
+                                  }                               
                             }
                         </div>
                         <div>
@@ -150,7 +152,6 @@
             </div>
         </div>
     </div>
-    @section Scripts{@{Html.RegisterMvcPagerScriptResource();}}
     <script>
         $(function () {
             $('[data-toggle="popover"]').popover();
@@ -246,3 +247,5 @@
         //    }
         //}
     </script>
+
+ @section Scripts{@{Html.RegisterMvcPagerScriptResource();}}

@@ -123,6 +123,18 @@
             else if (requestUrl.indexOf("triplogdetail") > -1 || requestUrl.indexOf("superviserstatistics") > -1) {
                 $("#areastatistics").addClass("active");
             }
+
+            $("form").submit(function (e) {
+                var starttime = $("#starttime").val();
+                var endtime = $("#endtime").val();
+
+                var result = lee.common.compareDate(starttime, endtime);
+
+                if (result) {
+                    alert("结束时间不能小于开始时间！");
+                    e.preventDefault(); //阻止form提交默认action
+                }
+            });
         })
 
     </script>
