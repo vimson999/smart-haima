@@ -1144,12 +1144,16 @@ namespace HaiMaApp.Web.Hanlder
             //var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
             //        @"select top 100 * from DuDaoRights where mobile = '" + username + "' and password = '" + oldpass + "' order by ID desc");
             string returnMsg = "用户名不正确";
+            //var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
+            //    @"select top 100 * from DuDaoRights where mobile = '" + username + "' order by ID desc");
             var datasource = SqlHelper.ExecuteDataset(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
-                @"select top 100 * from DuDaoRights where mobile = '" + username + "' order by ID desc");
+                @"select top 100 * from Staff where loginid = '" + username + "' order by ID desc");
             if (datasource != null && datasource.Tables[0].Rows.Count > 0)
             {
+                //var ret = SqlHelper.ExecuteNonQuery(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
+                //    string.Format("update [DuDaoRights] set password='{0}' where mobile={1}", newpass, username));
                 var ret = SqlHelper.ExecuteNonQuery(ConfigurationManager.ConnectionStrings["conn"].ToString(), CommandType.Text,
-                    string.Format("update [DuDaoRights] set password='{0}' where mobile={1}", newpass, username));
+                    string.Format("update [Staff] set loginpassword='{0}' ,modifytime = getdate(),modifier= '{1}' where loginid={1}", newpass, username));
                 if (ret > 0)
                 {
                     returnMsg = "success";
@@ -1181,7 +1185,7 @@ namespace HaiMaApp.Web.Hanlder
             postJson.payload.body = new ContentBody();
             postJson.payload.body.ticker = "ticker";
             postJson.payload.body.title = "Android 侬好哇";
-            postJson.payload.body.text = "";//"Android。。侬好哇。。侬好哇。";
+            postJson.payload.body.text = "Android。。侬好哇。。侬好哇。";//"Android。。侬好哇。。侬好哇。";
             postJson.payload.body.after_open = "go_custom";
             postJson.payload.body.custom = "comment-notify";
             postJson.description = "description-UID:" + 123;
